@@ -1,65 +1,64 @@
-import React, { useState } from "react";
-import { useAuth0 } from "./react-auth0-spa";
+import React, { Component } from "react";
+import Login from "./components/Login";
+import NewProfileForm from "./components/NewProfileForm";
 import axios from "axios";
 
-function App() {
-  const {
-    loading,
-    user,
-    isAuthenticated,
-    loginWithRedirect,
-    logout
-  } = useAuth0();
+class App extends Component {
+  state = {
+    loggedIn: false,
+    newAccountEmail: "",
+    getUserEmail: "",
+    getUserStatus: 0,
+    isNewAccount: false
+  };
 
-  const [accountName, setAccountName] = useState("eses");
+  callBackFunction = childData => {
+    this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    console.log("alussa childData: " + childData);
 
-  const submitHandler = event => {
-    event.preventDefault();
+    //if (this.state.newAccountEmail == childData) {
 
-    const newUser = {
-      id: 0,
-      name: accountName,
-      email: user.email
-    };
+    //}
+  };
 
-    axios
-      .post("http://217.101.44.31:8081/api/public/user/addUser", newUser)
+  async getUserByEmail() {
+    console.log("alussa newAccount: " + this.state.newAccountEmail);
+    await axios
+      .get(
+        "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
+          this.state.newAccountEmail
+      )
       .then(res => {
         console.log(res);
-        console.log(res.data);
+        console.log("callin jälkeen res.email: " + res.data.email);
+        this.setState({ getUserStatus: res.status });
+        this.setState({ getUserEmail: res.data.email });
+        console.log("callin jälkeen userEmail: " + this.state.getUserEmail);
+        this.testIfNewAccount();
       });
-  };
+    //.then(this.testIfNewAccount());
+  }
 
-  const nameChangeHandler = event => {
-    setAccountName(event.target.value);
-  };
+  testIfNewAccount() {
+    console.log("testissä newAccount: " + this.state.newAccountEmail);
+    console.log("testissä userEmail: " + this.state.getUserEmail);
 
-  return (
-    <div className="App">
-      <header>
-        <div>
-          {!isAuthenticated && (
-            <button onClick={() => loginWithRedirect({})}>Log in</button>
-          )}
-          {isAuthenticated && (
-            <div>
-              <button onClick={() => logout()}>Log out</button>
-              <form onSubmit={submitHandler}>
-                <h1>New Login</h1>
-                <p>Enter your name:</p>
-                <input type="text" onChange={nameChangeHandler} />
-                <input type="submit" />
-              </form>
-            </div>
-          )}
-        </div>
-      </header>
-    </div>
-  );
+    if (this.state.newAccountEmail != this.state.getUserEmail) {
+      this.setState({ isNewAccount: true });
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <Login callBack={this.callBackFunction} />
+        {this.state.isNewAccount && (
+          <NewProfileForm newEmail={this.state.newAccountEmail} />
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
