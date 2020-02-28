@@ -30,6 +30,7 @@ class NewProfileForm extends Component {
   render() {
     return (
       <div>
+        {console.log("newForm rendered")}
         <form onSubmit={this.submitHandler}>
           <h1>New Login</h1>
           <p>Enter your name:</p>
