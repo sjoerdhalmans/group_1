@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Login from "./components/Login";
 import NewProfileForm from "./components/NewProfileForm";
 import axios from "axios";
+import FriendList from "./components/FriendList"
 
 class App extends Component {
   state = {
@@ -43,6 +44,12 @@ class App extends Component {
         {this.state.isNewAccount && (
           <NewProfileForm newEmail={this.state.newAccountEmail} />
         )}
+
+
+        {this.state.getUserEmail !="" && (
+          <FriendList flist ={this.state.getUserEmail } />
+        )}
+
       </div>
     );
   }

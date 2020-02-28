@@ -12,13 +12,15 @@ class FriendList extends Component{
     super(props);
 
 this.state ={
-  friendsCalled: false,
+  getFriendsCalled: false,
+  friendListUpdated: false,
+
   userEmail: props.flist,
 
-  friendId :[555, 333, 222,],
-  friendName: ["Mikko", "Antero", "Jaska"],
-  friendEmail:["mike","ant","jaska"]
-  
+  friendId :[123],
+  friendName: ["testNameForDebug"],
+  friendEmail:["testEmail@debug"]
+
 };
 
 
@@ -48,6 +50,7 @@ async getFriends()
         console.log(item.name);
         console.log(item.email);
 
+        this.setState({friendListUpdated: true})
 
       });
 
@@ -63,19 +66,27 @@ async getFriends()
 //Render
   render() {
 
-    if(this.state.userEmail != "" && this.state.friendsCalled == false)
+    if(this.state.userEmail != "" && this.state.getFriendsCalled == false)
     {
+      this.setState({getFriendsCalled: true});
+
       this.getFriends();
-      this.setState({friendsCalled: true});
     }
 
     return (
+
+
       <div>
       <p> {this.state.userEmail} </p>
         <ul>
-          {this.state.friendName.map(item => (
+
+
+          {this.state.friendListUpdated && (  this.state.friendName.map(item => (
             <li key={item}>{item}</li>
-          ))}
+          )))
+
+          }
+
         </ul>
       </div>
     );
