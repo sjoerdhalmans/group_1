@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Login from "./components/Login";
 import NewProfileForm from "./components/NewProfileForm";
 import axios from "axios";
 import FriendList from "./components/FriendList"
+import { Navbar, Nav, Button, Form, FormControl } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
   state = {
@@ -39,8 +41,22 @@ class App extends Component {
 
   render() {
     return (
+      <Fragment>
+      <Navbar bg="Light" expand="lg">
+      <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          
+        </Nav>
+        <Form inline>
+          <Login callBack={this.callBackFunction} />
+        </Form>
+      </Navbar.Collapse>
+    </Navbar>
+
+
       <div>
-        <Login callBack={this.callBackFunction} />
         {this.state.isNewAccount && (
           <NewProfileForm newEmail={this.state.newAccountEmail} />
         )}
@@ -51,6 +67,7 @@ class App extends Component {
         )}
 
       </div>
+      </Fragment>
     );
   }
 }
