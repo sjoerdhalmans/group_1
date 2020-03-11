@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Modal from "react-bootstrap/Modal";
 
 class NewProfileForm extends Component {
   state = {
-    newAccountName: ""
+    newAccountName: "",
+    showModal: true
   };
 
   nameChangeHandler = event => {
@@ -11,7 +15,7 @@ class NewProfileForm extends Component {
   };
 
   submitHandler = event => {
-    event.preventDefault();
+    //event.preventDefault();
 
     const newUser = {
       id: 0,
@@ -25,19 +29,34 @@ class NewProfileForm extends Component {
         console.log(res);
         console.log(res.data);
       });
+
+    this.props.callBack();
   };
+
+  handleModalClose = () => this.setState({ showModal: false });
 
   render() {
     return (
-      <div>
-        {console.log("newForm rendered")}
-        <form onSubmit={this.submitHandler}>
-          <h1>New Login</h1>
-          <p>Enter your name:</p>
-          <input type="text" onChange={this.nameChangeHandler} />
-          <input type="submit" />
-        </form>
-      </div>
+      <>
+        <Modal show={this.state.showModal} onHide={this.handleModalClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>New user</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <form>
+              <p>Enter your new username:</p>
+              <input type="text" onChange={this.nameChangeHandler} />
+            </form>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="primary" onClick={() => this.submitHandler()}>
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
     );
   }
 }
