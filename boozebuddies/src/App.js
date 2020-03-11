@@ -2,9 +2,9 @@ import React, { Component, Fragment } from "react";
 import Login from "./components/Login";
 import NewProfileForm from "./components/NewProfileForm";
 import axios from "axios";
-import FriendList from "./components/FriendList"
-import { Navbar, Nav, Button, Form, FormControl } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import FriendList from "./components/FriendList";
+import { Navbar, Nav, Button, Form, FormControl } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
   state = {
@@ -12,12 +12,17 @@ class App extends Component {
     newAccountEmail: "",
     getUserEmail: "",
     getUserStatus: 0,
-    isNewAccount: false
+    isNewAccount: false,
+    showFriends: false
   };
 
-  callBackFunction = childData => {
+  loginCallBack = childData => {
     this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
     this.setState({ loggedIn: true });
+  };
+
+  newProfileFormCallBack = () => {
+    this.setState({ isNewAccount: false });
   };
 
   async getUserByEmail() {
@@ -39,34 +44,48 @@ class App extends Component {
     }
   }
 
+  showFriends() {
+    this.setState({ showFriends: true });
+  }
+
   render() {
     return (
       <Fragment>
-      <Navbar bg="Light" expand="lg">
-      <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          
-        </Nav>
-        <Form inline>
-          <Login callBack={this.callBackFunction} />
-        </Form>
-      </Navbar.Collapse>
-    </Navbar>
+        <Navbar bg="Light" expand="lg">
+          <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
+          {this.state.loggedIn && (
+            <Nav.Link href="#friends" onClick={() => this.showFriends()}>
+              Friends
+            </Nav.Link>
+          )}
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto"></Nav>
+            <Form inline>
+              <Login callBack={this.loginCallBack} />
+            </Form>
+          </Navbar.Collapse>
+        </Navbar>
 
+        <div>
+          {this.state.isNewAccount && (
+            <NewProfileForm
+              newEmail={this.state.newAccountEmail}
+              callBack={this.newProfileFormCallBack}
+            />
+          )}
 
-      <div>
-        {this.state.isNewAccount && (
-          <NewProfileForm newEmail={this.state.newAccountEmail} />
+          {this.state.showFriends && (
+            <FriendList flist={this.state.getUserEmail} />
+          )}
+        </div>
+
+        {!this.state.loggedIn && (
+          <Fragment>
+            <h1>Welcome to Boozebuddies!</h1>
+            <h2>log in to proceed</h2>
+          </Fragment>
         )}
-
-
-        {this.state.getUserEmail !="" && (
-          <FriendList flist ={this.state.getUserEmail } />
-        )}
-
-      </div>
       </Fragment>
     );
   }
