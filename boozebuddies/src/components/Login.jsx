@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth0 } from "../react-auth0-spa";
-import { useState, useEffect } from "react";
-import { useRef } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
