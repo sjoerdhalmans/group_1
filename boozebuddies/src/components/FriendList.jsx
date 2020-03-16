@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Button, Form, Row, Col } from "react-bootstrap";
 
 class FriendList extends Component {
   constructor(props) {
@@ -44,22 +45,51 @@ class FriendList extends Component {
       });
   }
 
+  removeFriendHandler = i => {
+    console.log(i);
+  };
+
+  hideButtonHandler = () => {
+    this.props.callBack();
+  };
+
   //Render
   render() {
-    if (this.state.userEmail != "" && this.state.getFriendsCalled == false) {
+    if (this.state.userEmail !== "" && this.state.getFriendsCalled === false) {
       this.setState({ getFriendsCalled: true });
 
       this.getFriends();
     }
 
     return (
-      <div>
+      <>
         <p> {this.state.userEmail} </p>
         <ul>
           {this.state.friendListUpdated &&
-            this.state.friendName.map(item => <li key={item}>{item}</li>)}
+            this.state.friendName.map(item => (
+              <li key={item}>
+                {item}
+                <Button
+                  onClick={() => this.removeFriendHandler(item)}
+                  variant="danger"
+                >
+                  Remove friend
+                </Button>
+              </li>
+            ))}
         </ul>
-      </div>
+        <Form>
+          <Form.Label>Add friends</Form.Label>
+          <Form.Control type="email" placeholder="friends username" />
+          <Button variant="success" type="submit">
+            Add
+          </Button>
+        </Form>
+
+        <Button onClick={() => this.hideButtonHandler()}>
+          Hide friendlist
+        </Button>
+      </>
     );
   }
 }
