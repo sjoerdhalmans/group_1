@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import Login from "./components/Login";
 import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
 import FriendList from "./components/FriendList";
-import { Navbar, Nav, Button, Form, FormControl } from "react-bootstrap";
+import { Navbar, Nav, Form, Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
@@ -55,18 +55,22 @@ class App extends Component {
     this.setState({ changeUsernameState: false }, () => this.getUserByEmail());
   };
 
-  showFriends() {
-    this.setState({ showFriendsState: true });
-  }
+  hideButtonCallBack = () => {
+    this.setState({ showFriendsState: false });
+  };
 
-  changeUsername() {
+  showFriends = () => {
+    this.setState({ showFriendsState: true });
+  };
+
+  changeUsername = () => {
     this.setState({ changeUsernameState: true });
-  }
+  };
 
   render() {
     return (
       <>
-        <Navbar bg="Light" expand="lg">
+        <Navbar bg="light" expand="lg">
           <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
           {this.state.loggedIn && (
             <>
@@ -99,7 +103,10 @@ class App extends Component {
         )}
 
         {this.state.showFriendsState && (
-          <FriendList flist={this.state.getUserEmail} />
+          <FriendList
+            flist={this.state.getUserEmail}
+            callBack={this.hideButtonCallBack}
+          />
         )}
 
         {this.state.changeUsernameState && (
