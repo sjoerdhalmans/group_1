@@ -11,14 +11,13 @@ class AddFriend extends Component {
 
   handleModalClose = () => {
     this.setState({ showModal: false });
-    
   };
 
   submitHandler = event => {};
 
   render() {
     return (
-      <>
+      <div>
         <Modal show={this.state.showModal} onHide={this.handleModalClose}>
           <Modal.Header closeButton>
             <Modal.Title>Add a friend</Modal.Title>
@@ -37,7 +36,7 @@ class AddFriend extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
-      </>
+      </div>
     );
   }
 }
