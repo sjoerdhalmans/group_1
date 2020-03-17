@@ -88,7 +88,7 @@ class FriendList extends Component {
                   variant="danger"
                   className="removeButton"
                 >
-                  X
+                  XX
                 </Button>
                 </ListGroup.Item>
             ))}
