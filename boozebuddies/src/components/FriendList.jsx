@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button, Form, Row, Col } from "react-bootstrap";
+import { Button, Form, Row, Col, ListGroup } from "react-bootstrap";
+import './FriendList.css';
+import AddFriend from './addFriend';
 
 class FriendList extends Component {
   constructor(props) {
@@ -14,7 +16,8 @@ class FriendList extends Component {
 
       friendId: [123],
       friendName: ["testNameForDebug"],
-      friendEmail: ["testEmail@debug"]
+      friendEmail: ["testEmail@debug"],
+      addFriendState: false
     };
 
     //this.state = {  }
@@ -53,6 +56,14 @@ class FriendList extends Component {
     this.props.callBack();
   };
 
+  addFriendCallBack = () => {
+    this.setState({ addFriendState: false })
+  };
+
+  addFriend = () => {
+    this.setState({addFriendState: true});
+  };
+
   //Render
   render() {
     if (this.state.userEmail !== "" && this.state.getFriendsCalled === false) {
@@ -62,34 +73,37 @@ class FriendList extends Component {
     }
 
     return (
-      <>
-        <p> {this.state.userEmail} </p>
-        <ul>
+      <div>
+        <h4 className="friendsHeader">Friends</h4>
+
+        <Button className="removeButton" onClick={() => this.hideButtonHandler()}>
+          Hide
+        </Button>
+        <ListGroup as="ul">
           {this.state.friendListUpdated &&
             this.state.friendName.map(item => (
-              <li key={item}>
-                {item}
+              <ListGroup.Item action as="li" key={item}>{item}
                 <Button
                   onClick={() => this.removeFriendHandler(item)}
                   variant="danger"
+                  className="removeButton"
                 >
-                  Remove friend
+                  X
                 </Button>
-              </li>
+                </ListGroup.Item>
             ))}
-        </ul>
-        <Form>
-          <Form.Label>Add friends</Form.Label>
-          <Form.Control type="email" placeholder="friends username" />
-          <Button variant="success" type="submit">
-            Add
+                    <Button variant="success" type="submit" onClick={() => this.addFriend()}>
+            Add Friend
           </Button>
-        </Form>
+        </ListGroup>
 
-        <Button onClick={() => this.hideButtonHandler()}>
-          Hide friendlist
-        </Button>
-      </>
+        {this.state.addFriendState && (
+          <AddFriend
+            callBack={this.addFriendCallback}
+          />
+        )}
+
+      </div>
     );
   }
 }

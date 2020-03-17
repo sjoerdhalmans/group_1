@@ -6,6 +6,7 @@ import axios from "axios";
 import FriendList from "./components/FriendList";
 import { Navbar, Nav, Form, Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import './style.css';
 
 class App extends Component {
   state = {
@@ -69,7 +70,7 @@ class App extends Component {
 
   render() {
     return (
-      <>
+      <div className="flexContainer">
         <Navbar bg="light" expand="lg">
           <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
           {this.state.loggedIn && (
@@ -102,12 +103,14 @@ class App extends Component {
           />
         )}
 
+        <div className="friendList">
         {this.state.showFriendsState && (
           <FriendList
             flist={this.state.getUserEmail}
             callBack={this.hideButtonCallBack}
           />
         )}
+        </div>
 
         {this.state.changeUsernameState && (
           <ChangeUsername
@@ -118,11 +121,11 @@ class App extends Component {
 
         {!this.state.loggedIn && (
           <>
-            <h1>Welcome to Boozebuddies!</h1>
-            <h2>log in to proceed</h2>
+            <h1 className="mainHeader1">Welcome to Boozebuddies!</h1>
+            <h2 className="mainHeader2">log in to proceed</h2>
           </>
         )}
-      </>
+      </div>
     );
   }
 }

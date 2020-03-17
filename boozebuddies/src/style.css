@@ -1,0 +1,65 @@
+
+.flexContainer {
+    flex-flow: column wrap;
+    justify-content: right;
+}
+
+.newUser {
+    width: 100%;
+    float:left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}
+
+.mainScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}
+
+.friendList {
+    margin-left:10px;
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    border-radius: 10px;
+    position: absolute;
+    width: 235px;
+}
+
+.headerStyle {
+    color: rgb(0, 0, 0);
+}
+
+.friendsHeader {
+    color: rgb(0, 0, 0);
+    font-size: x-large;
+    margin-top: 10px;
+    align-items: center;
+    margin-left: 60px;
+}
+
+.list-group-mine .list-group-item {
+    background-color: rgb(221, 146, 6);
+}
+
+.mainHeader2 {
+    display:flex;
+    justify-content: center;
+    margin-top:20px;
+    color: darkorange;
+}
+
+.mainHeader1 {
+    display:flex;
+    justify-content:center;
+    margin-top:260px;
+    color: darkorange;
+
+}
+
+.button {
+    align-items:center;
+}
