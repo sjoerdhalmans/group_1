@@ -1,0 +1,6 @@
+.modal-overlay {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: rgb(32, 32, 32);
+}
