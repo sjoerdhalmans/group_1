@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, ListGroup } from "react-bootstrap";
-import './FriendList.css';
-import AddFriend from './AddFriend';
+import "./FriendList.css";
+import AddFriend from "./AddFriend";
 
 class FriendList extends Component {
   constructor(props) {
@@ -57,11 +57,11 @@ class FriendList extends Component {
   };
 
   addFriendCallBack = () => {
-    this.setState({ addFriendState: false })
+    this.setState({ addFriendState: false });
   };
 
   addFriend = () => {
-    this.setState({addFriendState: true});
+    this.setState({ addFriendState: true });
   };
 
   //Render
@@ -82,7 +82,13 @@ class FriendList extends Component {
         <ListGroup as="ul">
           {this.state.friendListUpdated &&
             this.state.friendName.map(item => (
-              <ListGroup.Item className="friendListBG" action as="li" key={item}>{item}
+              <ListGroup.Item
+                className="friendListBG"
+                action
+                as="li"
+                key={item}
+              >
+                {item}
                 <Button
                   onClick={() => this.removeFriendHandler(item)}
                   variant="danger"
@@ -90,19 +96,20 @@ class FriendList extends Component {
                 >
                   X
                 </Button>
-                </ListGroup.Item>
+              </ListGroup.Item>
             ))}
-                    <Button className="addFriendButton" type="submit" onClick={() => this.addFriend()}>
+          <Button
+            className="addFriendButton"
+            type="submit"
+            onClick={() => this.addFriend()}
+          >
             Add Friend
           </Button>
         </ListGroup>
 
         {this.state.addFriendState && (
-          <AddFriend
-            callBack={this.addFriendCallback}
-          />
+          <AddFriend callBack={this.addFriendCallBack} />
         )}
-
       </div>
     );
   }

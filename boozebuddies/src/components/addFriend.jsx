@@ -6,11 +6,12 @@ import Modal from "react-bootstrap/Modal";
 
 class AddFriend extends Component {
   state = {
-    showModal: true,
+    showModal: true
   };
 
   handleModalClose = () => {
     this.setState({ showModal: false });
+    this.props.callBack();
   };
 
   submitHandler = event => {};
