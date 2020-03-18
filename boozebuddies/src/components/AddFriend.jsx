@@ -42,4 +42,6 @@ class AddFriend extends Component {
   }
 }
 
+//change filename
+
 export default AddFriend;
