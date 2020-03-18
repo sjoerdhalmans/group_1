@@ -3,6 +3,7 @@ import { useAuth0 } from "../react-auth0-spa";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import './Login.css';
 
 function Login(props) {
   const {
@@ -34,7 +35,7 @@ function Login(props) {
         <div>
           {!isAuthenticated && (
             <Button
-              variant="outline-success"
+              className="button"
               onClick={() => loginWithRedirect({})}
             >
               Log in
@@ -42,7 +43,7 @@ function Login(props) {
           )}
           {isAuthenticated && (
             <div>
-              <Button variant="outline-success" onClick={() => logout()}>
+              <Button className="button" onClick={() => logout()}>
                 Log out
               </Button>
             </div>

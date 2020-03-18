@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
+import './ChangeUsername.css';
 
 class ChangeUsername extends Component {
   state = {
@@ -39,7 +40,7 @@ class ChangeUsername extends Component {
   render() {
     return (
       <>
-        <Modal show={this.state.showModal} onHide={this.handleModalClose}>
+        <Modal className="modal-overlay" show={this.state.showModal} onHide={this.handleModalClose}>
           <Modal.Header closeButton>
             <Modal.Title>Change username</Modal.Title>
           </Modal.Header>

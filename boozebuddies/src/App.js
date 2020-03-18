@@ -4,8 +4,9 @@ import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
 import FriendList from "./components/FriendList";
-import { Navbar, Nav, Form, Container, Row, Col } from "react-bootstrap";
+import { Navbar, Nav, Form, } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import './style.css';
 
 class App extends Component {
   state = {
@@ -69,11 +70,11 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="#home">Boozebuddies</Navbar.Brand>
+      <div className="flexContainer">
+        <Navbar className="navBar" expand="lg">
+          <h2 className="navBarTitle" href="#home">Boozebuddies</h2>
           {this.state.loggedIn && (
-            <>
+            <div>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
                 Friends
               </Nav.Link>
@@ -83,7 +84,7 @@ class App extends Component {
               >
                 Change Username
               </Nav.Link>
-            </>
+            </div>
           )}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -102,12 +103,14 @@ class App extends Component {
           />
         )}
 
+        <div className="friendList">
         {this.state.showFriendsState && (
           <FriendList
             flist={this.state.getUserEmail}
             callBack={this.hideButtonCallBack}
           />
         )}
+        </div>
 
         {this.state.changeUsernameState && (
           <ChangeUsername
@@ -117,12 +120,12 @@ class App extends Component {
         )}
 
         {!this.state.loggedIn && (
-          <>
-            <h1>Welcome to Boozebuddies!</h1>
-            <h2>log in to proceed</h2>
-          </>
+          <div>
+            <h1 className="mainHeader1">Welcome to Boozebuddies!</h1>
+            <h2 className="mainHeader2">Log in to proceed.</h2>
+          </div>
         )}
-      </>
+      </div>
     );
   }
 }
