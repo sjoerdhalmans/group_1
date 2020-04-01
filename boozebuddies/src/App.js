@@ -4,9 +4,10 @@ import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
 import FriendList from "./components/FriendList";
-import { Navbar, Nav, Form, } from "react-bootstrap";
+import BarList from "./components/BarList";
+import { Navbar, Nav, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './style.css';
+import "./style.css";
 
 class App extends Component {
   state = {
@@ -18,7 +19,8 @@ class App extends Component {
     getUserStatus: 0,
     isNewAccount: false,
     showFriendsState: false,
-    changeUsernameState: false
+    changeUsernameState: false,
+    barListState: false
   };
 
   async getUserByEmail() {
@@ -60,6 +62,10 @@ class App extends Component {
     this.setState({ showFriendsState: false });
   };
 
+  barListCallBack = () => {
+    this.setState({ barListState: false });
+  };
+
   showFriends = () => {
     this.setState({ showFriendsState: true });
   };
@@ -68,13 +74,22 @@ class App extends Component {
     this.setState({ changeUsernameState: true });
   };
 
+  showBarList = () => {
+    this.setState({ barListState: true });
+  };
+
   render() {
     return (
       <div className="flexContainer">
         <Navbar className="navBar" expand="lg">
-          <h2 className="navBarTitle" href="#home">Boozebuddies</h2>
+          <h2 className="navBarTitle" href="#home">
+            Boozebuddies
+          </h2>
           {this.state.loggedIn && (
             <div>
+              <Nav.Link href="#bars" onClick={() => this.showBarList()}>
+                Bars
+              </Nav.Link>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
                 Friends
               </Nav.Link>
@@ -103,13 +118,19 @@ class App extends Component {
           />
         )}
 
+        <div className="barList">
+          {this.state.barListState && (
+            <BarList callBack={this.barListCallBack} />
+          )}
+        </div>
+
         <div className="friendList">
-        {this.state.showFriendsState && (
-          <FriendList
-            flist={this.state.getUserEmail}
-            callBack={this.hideButtonCallBack}
-          />
-        )}
+          {this.state.showFriendsState && (
+            <FriendList
+              flist={this.state.getUserEmail}
+              callBack={this.hideButtonCallBack}
+            />
+          )}
         </div>
 
         {this.state.changeUsernameState && (

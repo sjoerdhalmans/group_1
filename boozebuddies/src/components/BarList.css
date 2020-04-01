@@ -1,0 +1,60 @@
+.barsHeader {
+  color: orange;
+  font-weight: bold;
+  font-size: 30px;
+  letter-spacing: 0.05em;
+  height: 50px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.barsHideButton {
+  position: absolute;
+  right: 5px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.barList {
+  border-style: solid;
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  position: absolute;
+  width: 235px;
+  color: white;
+}
+
+.barListHeader {
+  background-color: black;
+}
+
+.barListToggle {
+  color: orange;
+  font-size: 20px;
+}
+
+.barListBody {
+  height: 100px;
+  background-color: black;
+  font-weight: lighter;
+}
+
+.barListBeerButton {
+  position: absolute;
+  right: 5px;
+  bottom: 50px;
+  color: black;
+  background-color: orange;
+}
+
+.barListEditButton {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  color: black;
+  background-color: orange;
+}
