@@ -19,7 +19,9 @@ class App extends Component {
     getUserStatus: 0,
     isNewAccount: false,
     showFriendsState: false,
-    changeUsernameState: false
+    changeUsernameState: false,
+
+    barId: 0
   };
 
   async getUserByEmail() {
@@ -116,7 +118,7 @@ class App extends Component {
         {this.state.loggedIn && (
         <div className="beerList">
         <BeerList
-          barid="0"
+          barid={this.barId}
         />
         </div>
         )}

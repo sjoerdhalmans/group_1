@@ -9,13 +9,11 @@ import { Button, ListGroup } from "react-bootstrap";
 //Beer
 //it might be better to have separate Beer.jsx file or maybe some common utility file to contain this kind of small classes
 class Beer {
-  constructor(id, name, brand) {
+  constructor(id, name, brand, alcoholPercentage) {
     this.id = id;
     this.name = name;
     this.brand = brand;
-
-//this will be added later when beerAPI is online
-    //this.alcoholPercentage = alcoholPercentage; //or ABV
+    this.alcoholPercentage = alcoholPercentage;
   }
 }
 
@@ -28,90 +26,137 @@ class BeerList extends Component {
   {
     super(props);
 
-    let beer333 =  new Beer(333, "Kalja", "Merkki"); //testbeer for debug
+    //Button function binds
+    this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
+    this.sortByNameClicked = this.sortByNameClicked.bind(this);
+    this.sortByAlcoholPClicked = this.sortByAlcoholPClicked.bind(this);
+
+
+    let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
 
     this.state = {
 
+        getBeersCalled: false,
+        filterArrayCalled: false,
         beerListUpdated: false,
 
         beerArray:[beer333],
+        beerArrayFiltered:[beer333],
 
-        listOrder: "name",
-        //listFilter:""
+        listOrder: "brand",
+        listFilter:"",
 
-        //barId: props.barId,
+        barId: props.barId
         //addBeerState: false
       };
   }
 
 
 //Fuctions
-  componentDidMount() //this makes component re-render when a proberty in state is changed
+  componentDidMount()
   {
+    //if(!this.state.getBeersCalled)
     this.getBeers();
+    this.sortListBy(this.state.listOrder);
   }
+
+componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-render when a proberty in state is changed
+{
+  if(prevState.listOrder != this.state.listOrder)
+  {
+    this.sortListBy(this.state.listOrder);
+  }
+
+
+}
+
+
+
 
 
   async getBeers()
   {
 
-    //this.setState({beerArray: null})
+    let newBeersArray = this.state.beerArray; //creating new array for beer, so setState can be used instead of push
+
 
     await axios
-      .get("http://217.101.44.31:8081/api/public/user/getAllUsers") //this will be changed when beerAPI is online
+      //.get("http://217.101.44.31:8081/api/public/user/getAllUsers") //this will be changed when beerAPI is online
+      .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
       .then(res => {
         console.log(res);
 
-        res.data.forEach((item, i) => {
-          const beer = new Beer(item.id, item.name, item.email);
-          this.state.beerArray.push(beer);
+        res.data.beers.forEach((item, i) => {
+          const beer = new Beer(item.id, item.name, item.brand, item.alcoholPercentage);
+
+        //  this.setState({beerArray: [this.beerArray, beer]})
+          newBeersArray.push(beer);
         });
 
-        this.sortListBy(this.state.listOrder);
 
-        this.state.beerArray = this.filterListByNamePart("Ju"); //beerArray can be filtered
+        //this.sortListBy(this.state.listOrder);
+        //this.state.beerArrayFiltered = this.filterListByNamePart(this.state.listFilter); //beerArray can be filtered
 
-        this.setState({ beerListUpdated: true });
+        this.setState({ beerArray: newBeersArray });
+        //this.setState({ beerListUpdated: true, getBeersCalled: true });
       })
     }
 
 
    sortListBy(type) //possible parameters: name/brand/id (string), later ABV
     {
-          if(type == "id"){
-            this.state.beerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1);
+        let newOrderBeerArray = this.state.beerArray;
+
+          if(type == "id" || type == "alcoholPercentage"){
+            newOrderBeerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1);
           }
           else {
-            this.state.beerArray.sort((a, b) => a[type].localeCompare(b[type], undefined, {sensitivity: 'base'})) //ignores case
+            newOrderBeerArray.sort((a, b) => a[type].localeCompare(b[type], undefined, {sensitivity: 'base'})) //ignores case
           }
+
+          this.setState({beerArray: newOrderBeerArray})
     }
 
 
     filterListByNamePart(text) //returns beerArray with only beers which name contains given parameter(string)
     {
-      let filteredArray = this.state.beerArray.filter(beer => beer.name.includes(text))
-      return filteredArray
-    }
-/*
-    sortListById = () => {
-        this.setState({ listOrder: "id", beerListUpdated: false })
-
-    };
-*/
-
-/*
-      handleChange(event){
-        this.setState({listFilter: event.target.value});
-
-        //let text = this.listFilterName.value
-        //this.setState({listFilter: text, beerListUpdated: false })
+      if(!null && text !="")
+      {
+        let filteredArray = this.state.beerArray.filter(beer => beer.name.includes(text))
+        return filteredArray
       }
-
-    handleSubmit(event) {
-      //alert('A name was submitted: ' + this.state.value);
-      event.preventDefault();
+      else
+      {
+        return this.state.beerArray
+      }
     }
-*/
+
+
+    sortByNameClicked(event)
+    {
+      event.preventDefault()
+      //alert(this.props)
+      this.setState({listOrder: "name", beerListUpdated: false})
+
+    }
+
+    sortByBrandClicked(event)
+    {
+      event.preventDefault()
+      //alert(this.props)
+      this.setState({listOrder: "brand", beerListUpdated: false})
+
+    }
+
+    sortByAlcoholPClicked(event)
+    {
+      event.preventDefault()
+      //alert(this.props)
+      this.setState({listOrder: "alcoholPercentage", beerListUpdated: false})
+
+    }
+
+
 
 
 
@@ -119,51 +164,55 @@ class BeerList extends Component {
 
 //Render
   render(){
+
+    const {beerArrayFiltered} = this.state
+    const {beerListUpdated} = this.state
+
     return(
 
       <React.Fragment>
 
         <h4>Beerlist</h4>
-       <p>sort by:
-        <Button
-          type="submit"
-          onClick={() => this.sortListById()}
-        >
-          id
-        </Button>
 
         <Button
           type="submit"
-          onClick={() => this.setState({listOrder:"name"})}
+          onClick={this.sortByBrandClicked}
+        >
+          brand
+        </Button>
+
+
+        <Button
+          type="submit"
+          onClick={this.sortByNameClicked}
         >
           name
         </Button>
 
+        <Button
+          type="submit"
+          onClick={this.sortByAlcoholPClicked}
+        >
+          ABV %
+        </Button>
 
 
-        <form onChage={this.handleSubmit}>
-        <input type="text" value={this.state.listFilter} onChange={this.handleChange}/>
-        </form>
 
-        </p>
-
-
-
-        {this.state.beerListUpdated && this.state.beerArray.map(beer => (
-        <ul>
-          {beer.id}: <a target="_blank" href="https://www.google.com/">{beer.name}</a>: {beer.brand} <button> Test Button </button>
+        {this.state.beerArray.map(beer => (
+        <ul key={beer.id}>
+          {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
         </ul>
         ))}
 
-        {this.state.beerListUpdated && <ul>beerlist updated true</ul> }
+        {this.state.beerListUpdated && <ul>beerlist updated true, bar id: {this.state.barId}</ul> }
       </React.Fragment>
     )
 
 
 
-          {//don't know if this is good way to implement this
-            this.setState({beerListUpdated:false})
-          }
+    {//don't know if this is good way to implement this
+      this.setState({beerListUpdated:false})
+    }
   }
 
 
