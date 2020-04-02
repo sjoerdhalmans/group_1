@@ -2,20 +2,22 @@ import React, { Component } from "react";
 import { Button, Accordion, Card } from "react-bootstrap";
 import "./BarList.css";
 import axios from "axios";
+import EditBar from "./EditBar";
 
 class BarList extends Component {
-  constructor(props) {
-    super(props);
-    this.getFriends();
-  }
-
   state = {
+    editBarState: false,
+    selectedBarId: 0,
     barListUpdated: false,
     bars: [],
     barId: [],
     barName: [],
     barAdress: []
   };
+
+  componentDidMount() {
+    this.getFriends();
+  }
 
   async getFriends() {
     await axios
@@ -37,6 +39,15 @@ class BarList extends Component {
 
   hideButtonHandler = () => {
     this.props.callBack();
+  };
+
+  editBarCallBack = () => {
+    this.setState({ editBarState: false });
+  };
+
+  showEditBar = param => {
+    this.setState({ selectedBarId: param });
+    this.setState({ editBarState: true });
   };
 
   render() {
@@ -66,12 +77,23 @@ class BarList extends Component {
                   <Card.Body className="barListBody">
                     {this.state.barAdress[i]}
                     <Button className="barListBeerButton">Beer list</Button>
-                    <Button className="barListEditButton">Edit bar</Button>
+                    <Button
+                      className="barListEditButton"
+                      onClick={() => this.showEditBar(item)}
+                    >
+                      Edit bar
+                    </Button>
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
             ))}
         </Accordion>
+        {this.state.editBarState && (
+          <EditBar
+            editBarId={this.state.selectedBarId}
+            callBack={this.editBarCallBack}
+          />
+        )}
       </div>
     );
   }

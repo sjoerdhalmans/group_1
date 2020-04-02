@@ -19,6 +19,15 @@
   letter-spacing: 0.05em;
 }
 
+.barsHideButton:hover,
+.barsHideButton:active,
+.barsHideButton:focus,
+.barsHideButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
 .barList {
   border-style: solid;
   border-color: rgb(204, 92, 0);
@@ -26,10 +35,11 @@
   position: absolute;
   width: 235px;
   color: white;
+  background-color: rgb(29, 29, 29);
 }
 
 .barListHeader {
-  background-color: black;
+  background-color: rgb(29, 29, 29);
 }
 
 .barListToggle {
@@ -41,6 +51,7 @@
   height: 100px;
   background-color: black;
   font-weight: lighter;
+  background-color: rgb(29, 29, 29);
 }
 
 .barListBeerButton {
@@ -51,10 +62,28 @@
   background-color: orange;
 }
 
+.barListBeerButton:hover,
+.barListBeerButton:active,
+.barListBeerButton:focus,
+.barListBeerButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
 .barListEditButton {
   position: absolute;
   right: 5px;
   bottom: 5px;
   color: black;
   background-color: orange;
+}
+
+.barListEditButton:hover,
+.barListEditButton:active,
+.barListEditButton:focus,
+.barListEditButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
 }
