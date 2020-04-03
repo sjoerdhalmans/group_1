@@ -35,11 +35,11 @@
   position: absolute;
   width: 235px;
   color: white;
-  background-color: rgb(29, 29, 29);
+  background-color: rgb(32, 32, 32);
 }
 
 .barListHeader {
-  background-color: rgb(29, 29, 29);
+  background-color: rgb(32, 32, 32);
 }
 
 .barListToggle {
@@ -51,13 +51,20 @@
   height: 100px;
   background-color: black;
   font-weight: lighter;
-  background-color: rgb(29, 29, 29);
+  background-color: rgb(32, 32, 32);
+}
+
+.barListBodyText {
+  position: relative;
+  bottom: 22px;
+  color: orange;
+  font-size: 18px;
 }
 
 .barListBeerButton {
   position: absolute;
-  right: 5px;
-  bottom: 50px;
+  right: 10px;
+  bottom: 60px;
   color: black;
   background-color: orange;
 }
@@ -73,8 +80,8 @@
 
 .barListEditButton {
   position: absolute;
-  right: 5px;
-  bottom: 5px;
+  right: 10px;
+  bottom: 15px;
   color: black;
   background-color: orange;
 }

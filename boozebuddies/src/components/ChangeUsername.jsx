@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
-import './ChangeUsername.css';
+import "./ChangeUsername.css";
 
 class ChangeUsername extends Component {
   state = {
@@ -40,20 +40,31 @@ class ChangeUsername extends Component {
   render() {
     return (
       <>
-        <Modal className="modal-overlay" show={this.state.showModal} onHide={this.handleModalClose}>
-          <Modal.Header closeButton>
+        <Modal
+          className="modal-overlay"
+          show={this.state.showModal}
+          onHide={this.handleModalClose}
+        >
+          <Modal.Header className="changeUsernameModalHeader" closeButton>
             <Modal.Title>Change username</Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>
-            <form>
-              <p>Enter your new username:</p>
-              <input type="text" onChange={this.nameChangeHandler} />
-            </form>
+          <Modal.Body className="changeUsernameModalBody">
+            <Form.Group onChange={this.nameChangeHandler}>
+              <Form.Label>Enter your new username:</Form.Label>
+              <Form.Control
+                className="changeUsernameTextArea"
+                placeholder="new username"
+              />
+            </Form.Group>
           </Modal.Body>
 
-          <Modal.Footer>
-            <Button variant="primary" onClick={() => this.submitHandler()}>
+          <Modal.Footer className="changeUsernameModalFooter">
+            <Button
+              className="changeUsernameOkButton"
+              variant="primary"
+              onClick={() => this.submitHandler()}
+            >
               OK
             </Button>
           </Modal.Footer>

@@ -12,7 +12,9 @@ class BarList extends Component {
     bars: [],
     barId: [],
     barName: [],
-    barAdress: []
+    barAdress: [],
+    barTel: [],
+    barZip: []
   };
 
   componentDidMount() {
@@ -31,6 +33,8 @@ class BarList extends Component {
           this.state.barId.push(item.id);
           this.state.barName.push(item.name);
           this.state.barAdress.push(item.adress);
+          this.state.barTel.push(item.telephoneNumber);
+          this.state.barZip.push(item.zipcode);
 
           this.setState({ barListUpdated: true });
         });
@@ -75,8 +79,16 @@ class BarList extends Component {
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">
-                    {this.state.barAdress[i]}
-                    <Button className="barListBeerButton">Beer list</Button>
+                    <div className="barListBodyText">
+                      Adress: {this.state.barAdress[i]}
+                    </div>
+                    <div className="barListBodyText">
+                      Tel: {this.state.barTel[i]}
+                    </div>
+                    <div className="barListBodyText">
+                      Zip: {this.state.barZip[i]}
+                    </div>
+                    <Button className="barListBeerButton">Beerlist</Button>
                     <Button
                       className="barListEditButton"
                       onClick={() => this.showEditBar(item)}

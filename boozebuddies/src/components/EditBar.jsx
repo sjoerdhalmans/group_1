@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+import "./EditBar.css";
 
 class EditBar extends Component {
   state = {
@@ -99,48 +100,70 @@ class EditBar extends Component {
           show={this.state.showModal}
           onHide={this.handleModalClose}
         >
-          <Modal.Header closeButton>
+          <Modal.Header className="editBarModalHeader" closeButton>
             <Modal.Title>Edit bar {this.state.barName}</Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body className="editBarModalBody">
             {this.state.barInfoUpdated && (
-              <Form>
+              <Form className="editBarForm">
                 <Form.Group onChange={this.nameChangeHandler}>
                   <Form.Label>Name</Form.Label>
-                  <Form.Control placeholder={this.state.barName} />
+                  <Form.Control
+                    className="nameTextArea"
+                    placeholder={this.state.barName}
+                  />
                 </Form.Group>
 
                 <Form.Group onChange={this.adressChangeHandler}>
                   <Form.Label>Adress</Form.Label>
-                  <Form.Control placeholder={this.state.barAdress} />
+                  <Form.Control
+                    className="adressTextArea"
+                    placeholder={this.state.barAdress}
+                  />
                 </Form.Group>
 
                 <Form.Group onChange={this.zipChangeHandler}>
                   <Form.Label>Zipcode</Form.Label>
-                  <Form.Control placeholder={this.state.barZipcode} />
+                  <Form.Control
+                    className="zipTextArea"
+                    placeholder={this.state.barZipcode}
+                  />
                 </Form.Group>
 
                 <Form.Group onChange={this.telChangeHandler}>
                   <Form.Label>Telephone number</Form.Label>
-                  <Form.Control placeholder={this.state.barTel} />
+                  <Form.Control
+                    className="telTextArea"
+                    placeholder={this.state.barTel}
+                  />
                 </Form.Group>
 
                 <Form.Group onChange={this.lngChangeHandler}>
                   <Form.Label>Longitude</Form.Label>
-                  <Form.Control placeholder={this.state.barLng} />
+                  <Form.Control
+                    className="lngTextArea"
+                    placeholder={this.state.barLng}
+                  />
                 </Form.Group>
 
                 <Form.Group onChange={this.latChangeHandler}>
                   <Form.Label>Latitude</Form.Label>
-                  <Form.Control placeholder={this.state.barLat} />
+                  <Form.Control
+                    className="latTextArea"
+                    placeholder={this.state.barLat}
+                  />
                 </Form.Group>
               </Form>
             )}
           </Modal.Body>
 
-          <Modal.Footer>
-            <Button variant="primary" onClick={() => this.submitHandler()}>
+          <Modal.Footer className="editBarModalFooter">
+            <Button
+              className="editBarOkButton"
+              variant="primary"
+              onClick={() => this.submitHandler()}
+            >
               OK
             </Button>
           </Modal.Footer>

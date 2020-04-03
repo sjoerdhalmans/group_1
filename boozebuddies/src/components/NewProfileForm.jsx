@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
+import "./NewProfileForm.css";
 
 class NewProfileForm extends Component {
   state = {
@@ -39,19 +40,26 @@ class NewProfileForm extends Component {
     return (
       <>
         <Modal show={this.state.showModal} onHide={this.handleModalClose}>
-          <Modal.Header closeButton>
+          <Modal.Header className="newProfileFormModalHeader" closeButton>
             <Modal.Title>New user</Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>
-            <form>
-              <p>Enter your new username:</p>
-              <input type="text" onChange={this.nameChangeHandler} />
-            </form>
+          <Modal.Body className="newProfileFormModalBody">
+            <Form.Group onChange={this.nameChangeHandler}>
+              <Form.Label>Enter your new username:</Form.Label>
+              <Form.Control
+                className="newProfileFormTextArea"
+                placeholder="new username"
+              />
+            </Form.Group>
           </Modal.Body>
 
-          <Modal.Footer>
-            <Button variant="primary" onClick={() => this.submitHandler()}>
+          <Modal.Footer className="newProfileFormModalFooter">
+            <Button
+              className="newProfileFormOkButton"
+              variant="primary"
+              onClick={() => this.submitHandler()}
+            >
               OK
             </Button>
           </Modal.Footer>
