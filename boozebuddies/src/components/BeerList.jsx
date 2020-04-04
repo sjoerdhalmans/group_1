@@ -30,6 +30,7 @@ class BeerList extends Component {
     this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
     this.sortByNameClicked = this.sortByNameClicked.bind(this);
     this.sortByAlcoholPClicked = this.sortByAlcoholPClicked.bind(this);
+    this.sortReverseClicked = this.sortReverseClicked.bind(this);
 
 
     let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
@@ -44,6 +45,7 @@ class BeerList extends Component {
         beerArrayFiltered:[beer333],
 
         listOrder: "brand",
+        reverseListOrder: false,
         listFilter:"",
 
         barId: props.barId
@@ -55,30 +57,38 @@ class BeerList extends Component {
 //Fuctions
   componentDidMount()
   {
+    //console.log("componentDidMount");
     //if(!this.state.getBeersCalled)
     this.getBeers();
     this.sortListBy(this.state.listOrder);
   }
 
-componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-render when a proberty in state is changed
-{
-  if(prevState.listOrder != this.state.listOrder)
+
+
+  componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-render when a proberty in state is changed
   {
-    this.sortListBy(this.state.listOrder);
+    //console.log("componentDidUpdate");
+
+    if(prevState.listOrder != this.state.listOrder)
+    {
+      //console.log("if listOrder");
+      this.sortListBy(this.state.listOrder);
+    }
+
+    if(this.state.reverseListOrder == true)
+    {
+      //console.log("if sortReverse");
+      this.sortListReverseOrder();
+    }
+
   }
-
-
-}
-
 
 
 
 
   async getBeers()
   {
-
     let newBeersArray = this.state.beerArray; //creating new array for beer, so setState can be used instead of push
-
 
     await axios
       //.get("http://217.101.44.31:8081/api/public/user/getAllUsers") //this will be changed when beerAPI is online
@@ -93,14 +103,12 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
           newBeersArray.push(beer);
         });
 
-
-        //this.sortListBy(this.state.listOrder);
         //this.state.beerArrayFiltered = this.filterListByNamePart(this.state.listFilter); //beerArray can be filtered
 
         this.setState({ beerArray: newBeersArray });
-        //this.setState({ beerListUpdated: true, getBeersCalled: true });
       })
     }
+
 
 
    sortListBy(type) //possible parameters: name/brand/id (string), later ABV
@@ -108,7 +116,7 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
         let newOrderBeerArray = this.state.beerArray;
 
           if(type == "id" || type == "alcoholPercentage"){
-            newOrderBeerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1);
+            newOrderBeerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1); //sorts numeric values
           }
           else {
             newOrderBeerArray.sort((a, b) => a[type].localeCompare(b[type], undefined, {sensitivity: 'base'})) //ignores case
@@ -116,6 +124,22 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
 
           this.setState({beerArray: newOrderBeerArray})
     }
+
+
+
+    sortListReverseOrder()
+    {
+      //console.log("sortListReverseOrder");
+
+      let reverseOrderBeerArray = this.state.beerArray;
+
+      reverseOrderBeerArray.reverse();
+
+
+      this.setState({beerArray: reverseOrderBeerArray, reverseListOrder:false})
+    }
+
+
 
 
     filterListByNamePart(text) //returns beerArray with only beers which name contains given parameter(string)
@@ -131,30 +155,35 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
       }
     }
 
-
+//ButtonClick functions
     sortByNameClicked(event)
     {
       event.preventDefault()
-      //alert(this.props)
-      this.setState({listOrder: "name", beerListUpdated: false})
-
+      this.setState({listOrder: "name"})
     }
+
 
     sortByBrandClicked(event)
     {
       event.preventDefault()
-      //alert(this.props)
-      this.setState({listOrder: "brand", beerListUpdated: false})
-
+      this.setState({listOrder: "brand"})
     }
+
 
     sortByAlcoholPClicked(event)
     {
       event.preventDefault()
-      //alert(this.props)
-      this.setState({listOrder: "alcoholPercentage", beerListUpdated: false})
-
+      this.setState({listOrder: "alcoholPercentage"})
     }
+
+    sortReverseClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({reverseListOrder: true})
+    }
+
+
 
 
 
@@ -164,9 +193,6 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
 
 //Render
   render(){
-
-    const {beerArrayFiltered} = this.state
-    const {beerListUpdated} = this.state
 
     return(
 
@@ -189,11 +215,20 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
           name
         </Button>
 
+
         <Button
           type="submit"
           onClick={this.sortByAlcoholPClicked}
         >
           ABV %
+        </Button>
+
+
+        <Button
+          type="submit"
+          onClick={this.sortReverseClicked}
+        >
+          reverse
         </Button>
 
 
@@ -204,15 +239,8 @@ componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-ren
         </ul>
         ))}
 
-        {this.state.beerListUpdated && <ul>beerlist updated true, bar id: {this.state.barId}</ul> }
       </React.Fragment>
     )
-
-
-
-    {//don't know if this is good way to implement this
-      this.setState({beerListUpdated:false})
-    }
   }
 
 
