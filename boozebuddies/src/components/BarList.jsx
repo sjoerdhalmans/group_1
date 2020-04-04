@@ -3,36 +3,38 @@ import { Button, Accordion, Card } from "react-bootstrap";
 import "./BarList.css";
 import axios from "axios";
 import EditBar from "./EditBar";
+import AddBar from "./AddBar";
 
 class BarList extends Component {
   state = {
     editBarState: false,
+    addBarState: false,
     selectedBarId: 0,
     barListUpdated: false,
     bars: [],
     barId: [],
     barName: [],
-    barAdress: [],
+    barAddress: [],
     barTel: [],
-    barZip: []
+    barZip: [],
   };
 
   componentDidMount() {
-    this.getFriends();
+    this.getBars();
   }
 
-  async getFriends() {
+  async getBars() {
     await axios
       .get("http://217.101.44.31:8084/api/public/bar/getAllBars")
-      .then(res => {
+      .then((res) => {
         console.log(res);
 
         this.setState({ bars: res.data.bars });
 
-        res.data.bars.forEach(item => {
+        res.data.bars.forEach((item) => {
           this.state.barId.push(item.id);
           this.state.barName.push(item.name);
-          this.state.barAdress.push(item.adress);
+          this.state.barAddress.push(item.adress);
           this.state.barTel.push(item.telephoneNumber);
           this.state.barZip.push(item.zipcode);
 
@@ -46,18 +48,45 @@ class BarList extends Component {
   };
 
   editBarCallBack = () => {
-    this.setState({ editBarState: false });
+    this.setState({
+      editBarState: false,
+      barId: [],
+      barName: [],
+      barAddress: [],
+      barTel: [],
+      barZip: [],
+    });
+    this.getBars();
   };
 
-  showEditBar = param => {
+  showEditBar = (param) => {
     this.setState({ selectedBarId: param });
     this.setState({ editBarState: true });
+  };
+
+  addBarCallBack = () => {
+    this.setState({
+      addBarState: false,
+      barId: [],
+      barName: [],
+      barAddress: [],
+      barTel: [],
+      barZip: [],
+    });
+    this.getBars();
+  };
+
+  showAddBar = () => {
+    this.setState({ addBarState: true });
   };
 
   render() {
     return (
       <div>
         <h4 className="barsHeader">Bars</h4>
+        <Button className="addBarButton" onClick={() => this.showAddBar()}>
+          Add new bar
+        </Button>
         <Button
           className="barsHideButton"
           onClick={() => this.hideButtonHandler()}
@@ -80,7 +109,7 @@ class BarList extends Component {
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">
                     <div className="barListBodyText">
-                      Adress: {this.state.barAdress[i]}
+                      Address: {this.state.barAddress[i]}
                     </div>
                     <div className="barListBodyText">
                       Tel: {this.state.barTel[i]}
@@ -106,6 +135,8 @@ class BarList extends Component {
             callBack={this.editBarCallBack}
           />
         )}
+
+        {this.state.addBarState && <AddBar callBack={this.addBarCallBack} />}
       </div>
     );
   }

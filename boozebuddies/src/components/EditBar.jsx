@@ -7,15 +7,19 @@ import "./EditBar.css";
 class EditBar extends Component {
   state = {
     barId: 0,
-    barName: 0,
-    barAdress: 0,
-    barZipcode: 0,
-    barTel: 0,
-    barLng: 0,
-    barLat: 0,
+    barName: "",
+    barAddress: "",
+    barZipcode: "",
+    barTel: "",
+    barLng: "",
+    barLat: "",
     barBeers: [],
     showModal: true,
-    barInfoUpdated: false
+    barInfoUpdated: false,
+    tempBarName: "",
+    tempBarAddress: "",
+    tempBarZipcode: "",
+    tempBarTel: "",
   };
 
   componentDidMount() {
@@ -29,16 +33,21 @@ class EditBar extends Component {
         "http://217.101.44.31:8084/api/public/bar/getById/" +
           this.props.editBarId
       )
-      .then(res => {
-        this.setState({ barName: res.data.name });
-        this.setState({ barAdress: res.data.adress });
-        this.setState({ barZipcode: res.data.zipcode });
-        this.setState({ barTel: res.data.telephoneNumber });
-        this.setState({ barLng: res.data.longitude });
-        this.setState({ barLat: res.data.latitude });
-        this.setState({ barBeers: res.data.beers });
-
-        this.setState({ barInfoUpdated: true });
+      .then((res) => {
+        this.setState({
+          barName: res.data.name,
+          barAddress: res.data.adress,
+          barZipcode: res.data.zipcode,
+          barTel: res.data.telephoneNumber,
+          barLng: res.data.longitude,
+          barLat: res.data.latitude,
+          barBeers: res.data.beers,
+          tempBarName: res.data.name,
+          tempBarAddress: res.data.adress,
+          tempBarZipcode: res.data.zipcode,
+          tempBarTel: res.data.telephoneNumber,
+          barInfoUpdated: true,
+        });
       });
   }
 
@@ -47,49 +56,73 @@ class EditBar extends Component {
     this.props.callBack();
   };
 
-  submitHandler = event => {
+  submitHandler = () => {
     const editBarBody = {
-      adress: this.state.barAdress,
+      adress: this.state.barAddress,
       beers: this.state.barBeers,
       id: this.state.barId,
       latitude: this.state.barLat,
       longitude: this.state.barLng,
       name: this.state.barName,
       telephoneNumber: this.state.barTel,
-      zipcode: this.state.barZipcode
+      zipcode: this.state.barZipcode,
     };
 
     axios
       .put("http://217.101.44.31:8084/api/public/bar/editBar", editBarBody)
-      .then(res => {
+      .then((res) => {
         console.log(this.state.barBeers);
         console.log(res);
+
+        this.setState({
+          tempBarName: this.state.barName,
+          tempBarAddress: this.state.barAddress,
+          tempBarZipcode: this.state.barZipcode,
+          tempBarTel: this.state.barTel,
+        });
+
         this.handleModalClose();
       });
   };
 
-  nameChangeHandler = event => {
-    this.setState({ barName: event.target.value });
+  nameChangeHandler = (event) => {
+    let tempString = event.target.value;
+
+    if (tempString.length > 0 && tempString != null) {
+      this.setState({ barName: tempString });
+    } else {
+      this.setState({ barName: this.state.tempBarName });
+    }
   };
 
-  adressChangeHandler = event => {
-    this.setState({ barAdress: event.target.value });
+  addressChangeHandler = (event) => {
+    let tempString = event.target.value;
+
+    if (tempString.length > 0 && tempString != null) {
+      this.setState({ barAddress: tempString });
+    } else {
+      this.setState({ barAddress: this.state.tempBarAddress });
+    }
   };
 
-  zipChangeHandler = event => {
-    this.setState({ barZipcode: event.target.value });
+  zipChangeHandler = (event) => {
+    let tempString = event.target.value;
+
+    if (tempString.length > 0 && tempString != null) {
+      this.setState({ barZipcode: tempString });
+    } else {
+      this.setState({ barZipcode: this.state.tempBarZipcode });
+    }
   };
 
-  telChangeHandler = event => {
-    this.setState({ barTel: event.target.value });
-  };
+  telChangeHandler = (event) => {
+    let tempString = event.target.value;
 
-  lngChangeHandler = event => {
-    this.setState({ barLng: event.target.value });
-  };
-
-  latChangeHandler = event => {
-    this.setState({ barLat: event.target.value });
+    if (tempString.length > 0 && tempString != null) {
+      this.setState({ barTel: tempString });
+    } else {
+      this.setState({ barTel: this.state.tempBarTel });
+    }
   };
 
   render() {
@@ -101,7 +134,7 @@ class EditBar extends Component {
           onHide={this.handleModalClose}
         >
           <Modal.Header className="editBarModalHeader" closeButton>
-            <Modal.Title>Edit bar {this.state.barName}</Modal.Title>
+            <Modal.Title>Edit bar {this.state.tempBarName}</Modal.Title>
           </Modal.Header>
 
           <Modal.Body className="editBarModalBody">
@@ -115,11 +148,11 @@ class EditBar extends Component {
                   />
                 </Form.Group>
 
-                <Form.Group onChange={this.adressChangeHandler}>
-                  <Form.Label>Adress</Form.Label>
+                <Form.Group onChange={this.addressChangeHandler}>
+                  <Form.Label>Address</Form.Label>
                   <Form.Control
-                    className="adressTextArea"
-                    placeholder={this.state.barAdress}
+                    className="addressTextArea"
+                    placeholder={this.state.barAddress}
                   />
                 </Form.Group>
 
@@ -136,22 +169,6 @@ class EditBar extends Component {
                   <Form.Control
                     className="telTextArea"
                     placeholder={this.state.barTel}
-                  />
-                </Form.Group>
-
-                <Form.Group onChange={this.lngChangeHandler}>
-                  <Form.Label>Longitude</Form.Label>
-                  <Form.Control
-                    className="lngTextArea"
-                    placeholder={this.state.barLng}
-                  />
-                </Form.Group>
-
-                <Form.Group onChange={this.latChangeHandler}>
-                  <Form.Label>Latitude</Form.Label>
-                  <Form.Control
-                    className="latTextArea"
-                    placeholder={this.state.barLat}
                   />
                 </Form.Group>
               </Form>

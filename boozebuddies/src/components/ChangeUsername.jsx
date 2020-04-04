@@ -8,7 +8,8 @@ import "./ChangeUsername.css";
 class ChangeUsername extends Component {
   state = {
     showModal: true,
-    newUsernameInput: ""
+    newUsernameInput: "",
+    inputError: false,
   };
 
   handleModalClose = () => {
@@ -16,25 +17,32 @@ class ChangeUsername extends Component {
     this.props.callBack();
   };
 
-  nameChangeHandler = event => {
+  nameChangeHandler = (event) => {
     this.setState({ newUsernameInput: event.target.value });
   };
 
-  submitHandler = event => {
+  submitHandler = (event) => {
     const updateUserBody = {
       id: this.props.userId,
-      newUsername: this.state.newUsernameInput
+      newUsername: this.state.newUsernameInput,
     };
 
-    axios
-      .put(
-        "http://217.101.44.31:8081/api/public/user/UpdateUsername",
-        updateUserBody
-      )
-      .then(res => {
-        console.log(res.data);
-        this.handleModalClose();
-      });
+    if (
+      this.state.newUsernameInput.length > 0 &&
+      this.state.newUsernameInput != null
+    ) {
+      axios
+        .put(
+          "http://217.101.44.31:8081/api/public/user/UpdateUsername",
+          updateUserBody
+        )
+        .then((res) => {
+          console.log(res.data);
+          this.handleModalClose();
+        });
+    } else {
+      this.setState({ inputError: true });
+    }
   };
 
   render() {
@@ -60,6 +68,11 @@ class ChangeUsername extends Component {
           </Modal.Body>
 
           <Modal.Footer className="changeUsernameModalFooter">
+            {this.state.inputError && (
+              <div className="changeUsernameInputError">
+                Username can't be empty
+              </div>
+            )}
             <Button
               className="changeUsernameOkButton"
               variant="primary"

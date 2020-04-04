@@ -8,9 +8,29 @@
   margin-top: 20px;
 }
 
+.addBarButton {
+  position: absolute;
+  right: 85px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.addBarButton:hover,
+.addBarButton:active,
+.addBarButton:focus,
+.addBarButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
 .barsHideButton {
   position: absolute;
-  right: 5px;
+  right: 10px;
   top: 18px;
   color: black;
   background-color: orange;

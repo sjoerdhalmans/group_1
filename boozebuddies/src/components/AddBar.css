@@ -1,20 +1,20 @@
-.editBarModalHeader {
+.addBarModalHeader {
   color: rgb(204, 92, 0);
   background-color: rgb(32, 32, 32);
   border-color: rgb(204, 92, 0);
 }
 
-.editBarModalBody {
+.addBarModalBody {
   color: orange;
   background-color: rgb(32, 32, 32);
 }
 
-.editBarModalFooter {
+.addBarModalFooter {
   background-color: rgb(32, 32, 32);
   border-color: rgb(204, 92, 0);
 }
 
-.editBarOkButton {
+.addBarOkButton {
   right: 5px;
   top: 5px;
   color: white;
@@ -24,94 +24,70 @@
   letter-spacing: 0.05em;
 }
 
-.editBarOkButton:hover,
-.editBarOkButton:focus,
-.editBarOkButton:active {
+.addBarOkButton:hover,
+.addBarOkButton:focus,
+.addBarOkButton:active {
   background: orange;
   color: #ffffff;
   border-color: orange;
 }
 
-.nameTextArea {
+.addBarNameTextArea {
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
 }
 
-.nameTextArea:hover,
-.nameTextArea:focus,
-.nameTextArea:active {
+.addBarNameTextArea:hover,
+.addBarNameTextArea:focus,
+.addBarNameTextArea:active {
   background-color: rgb(32, 32, 32);
   color: orange;
   border-color: orange;
 }
 
-.addressTextArea {
+.addBarAddressTextArea {
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
 }
 
-.addressTextArea:hover,
-.addressTextArea:focus,
-.addressTextArea:active {
+.addBarAddressTextArea:hover,
+.addBarAddressTextArea:focus,
+.addBarAddressTextArea:active {
   background-color: rgb(32, 32, 32);
   color: orange;
   border-color: orange;
 }
 
-.zipTextArea {
+.addBarZipTextArea {
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
 }
 
-.zipTextArea:hover,
-.zipTextArea:focus,
-.zipTextArea:active {
+.addBarZipTextArea:hover,
+.addBarZipTextArea:focus,
+.addBarZipTextArea:active {
   background-color: rgb(32, 32, 32);
   color: orange;
   border-color: orange;
 }
 
-.telTextArea {
+.addBarTelTextArea {
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
 }
 
-.telTextArea:hover,
-.telTextArea:focus,
-.telTextArea:active {
+.addBarTelTextArea:hover,
+.addBarTelTextArea:focus,
+.addBarTelTextArea:active {
   background-color: rgb(32, 32, 32);
   color: orange;
   border-color: orange;
 }
 
-.lngTextArea {
-  background-color: rgb(32, 32, 32);
-  border-color: orange;
-  color: orange;
-}
-
-.lngTextArea:hover,
-.lngTextArea:focus,
-.lngTextArea:active {
-  background-color: rgb(32, 32, 32);
-  color: orange;
-  border-color: orange;
-}
-
-.latTextArea {
-  background-color: rgb(32, 32, 32);
-  border-color: orange;
-  color: orange;
-}
-
-.latTextArea:hover,
-.latTextArea:focus,
-.latTextArea:active {
-  background-color: rgb(32, 32, 32);
-  color: orange;
-  border-color: orange;
+.addBarInputError {
+  color: red;
 }

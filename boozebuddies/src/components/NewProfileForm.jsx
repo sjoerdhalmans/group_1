@@ -8,27 +8,35 @@ import "./NewProfileForm.css";
 class NewProfileForm extends Component {
   state = {
     newAccountName: "",
-    showModal: true
+    showModal: true,
+    inputError: false,
   };
 
-  nameChangeHandler = event => {
+  nameChangeHandler = (event) => {
     this.setState({ newAccountName: event.target.value });
   };
 
-  submitHandler = event => {
+  submitHandler = (event) => {
     const addUserBody = {
       id: 0,
       name: this.state.newAccountName,
-      email: this.props.newEmail
+      email: this.props.newEmail,
     };
 
-    axios
-      .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
-      .then(res => {
-        console.log(res.data);
-      });
+    if (
+      this.state.newAccountName.length > 0 &&
+      this.state.newAccountName != null
+    ) {
+      axios
+        .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
+        .then((res) => {
+          console.log(res.data);
+        });
 
-    this.props.callBack();
+      this.props.callBack();
+    } else {
+      this.setState({ inputError: true });
+    }
   };
 
   handleModalClose = () => {
@@ -55,6 +63,11 @@ class NewProfileForm extends Component {
           </Modal.Body>
 
           <Modal.Footer className="newProfileFormModalFooter">
+            {this.state.inputError && (
+              <div className="newProfileFormInputError">
+                Username can't be empty
+              </div>
+            )}
             <Button
               className="newProfileFormOkButton"
               variant="primary"

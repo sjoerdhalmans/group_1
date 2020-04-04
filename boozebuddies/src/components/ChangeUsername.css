@@ -45,3 +45,7 @@
   color: orange;
   border-color: orange;
 }
+
+.changeUsernameInputError {
+  color: red;
+}
