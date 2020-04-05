@@ -20,7 +20,7 @@ class App extends Component {
     isNewAccount: false,
     showFriendsState: false,
     changeUsernameState: false,
-    barListState: false
+    barListState: false,
   };
 
   async getUserByEmail() {
@@ -29,7 +29,7 @@ class App extends Component {
         "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
           this.state.newAccountEmail
       )
-      .then(res => {
+      .then((res) => {
         this.setState({ getUserStatus: res.status });
         this.setState({ getUserEmail: res.data.email });
         this.setState({ getUserId: res.data.id });
@@ -45,7 +45,7 @@ class App extends Component {
     }
   }
 
-  loginCallBack = childData => {
+  loginCallBack = (childData) => {
     this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
     this.setState({ loggedIn: true });
   };

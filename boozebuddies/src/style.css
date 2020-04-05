@@ -1,16 +1,11 @@
+body {
+  background-color: black;
+}
+
 .removeButton {
   position: absolute;
   right: 10px;
   top: 5px;
-}
-
-.flexContainer {
-  width: 1920px;
-  height: 977px;
-  position: relative;
-  background-color: black;
-  flex-flow: column wrap;
-  justify-content: right;
 }
 
 .mainScreen {

@@ -1,6 +1,5 @@
 .barsHeader {
   color: orange;
-  font-weight: bold;
   font-size: 30px;
   letter-spacing: 0.05em;
   height: 50px;
@@ -51,7 +50,6 @@
 .barList {
   border-style: solid;
   border-color: rgb(204, 92, 0);
-  font-weight: bold;
   position: absolute;
   width: 235px;
   color: white;
@@ -64,44 +62,47 @@
 
 .barListToggle {
   color: orange;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .barListBody {
-  height: 100px;
-  background-color: black;
-  font-weight: lighter;
   background-color: rgb(32, 32, 32);
 }
 
 .barListBodyText {
   position: relative;
-  bottom: 22px;
+  top: -20px;
   color: orange;
   font-size: 18px;
 }
 
-.barListBeerButton {
-  position: absolute;
-  right: 10px;
-  bottom: 60px;
-  color: black;
-  background-color: orange;
+.barListBeersHeader {
+  position: relative;
+  top: -50px;
+  color: orange;
+  font-size: 20px;
 }
 
-.barListBeerButton:hover,
-.barListBeerButton:active,
-.barListBeerButton:focus,
-.barListBeerButton:active {
-  background: orange;
-  color: #ffffff;
-  border-color: orange;
+.barListBeersList {
+  position: relative;
+  top: -40px;
+}
+
+.barListBeersListItem {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: rgb(204, 92, 0);
+}
+
+.barListBeerPrice {
+  position: absolute;
+  right: 20px;
 }
 
 .barListEditButton {
-  position: absolute;
-  right: 10px;
-  bottom: 15px;
+  position: relative;
+  left: 875px;
+  bottom: 100px;
   color: black;
   background-color: orange;
 }

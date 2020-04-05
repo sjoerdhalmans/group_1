@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Accordion, Card } from "react-bootstrap";
+import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
 import "./BarList.css";
 import axios from "axios";
 import EditBar from "./EditBar";
@@ -11,12 +11,19 @@ class BarList extends Component {
     addBarState: false,
     selectedBarId: 0,
     barListUpdated: false,
+    beerListUpdated: false,
+    toggleState: false,
     bars: [],
     barId: [],
     barName: [],
     barAddress: [],
     barTel: [],
     barZip: [],
+    beerId: [],
+    beerName: [],
+    beerPrice: [],
+    beerBrand: [],
+    beerAlcPct: [],
   };
 
   componentDidMount() {
@@ -42,6 +49,39 @@ class BarList extends Component {
         });
       });
   }
+
+  async getBarBeers(barIdParam) {
+    await axios
+      .get("http://217.101.44.31:8084/api/public/bar/getById/" + barIdParam)
+      .then((res) => {
+        res.data.beers.forEach((item) => {
+          this.state.beerId.push(item.beer.id);
+          this.state.beerName.push(item.beer.name);
+          this.state.beerBrand.push(item.beer.brand);
+          this.state.beerAlcPct.push(item.beer.alcoholPercentage);
+          this.state.beerPrice.push(item.price);
+
+          this.setState({ beerListUpdated: true });
+        });
+      });
+  }
+
+  toggleButtonHandler = (barIdParam) => {
+    if (this.state.toggleState === false) {
+      this.setState({ toggleState: true });
+      this.getBarBeers(barIdParam);
+    } else {
+      this.setState({
+        toggleState: false,
+        beerId: [],
+        beerName: [],
+        beerPrice: [],
+        beerBrand: [],
+        beerAlcPct: [],
+        beerListUpdated: false,
+      });
+    }
+  };
 
   hideButtonHandler = () => {
     this.props.callBack();
@@ -97,7 +137,10 @@ class BarList extends Component {
           {this.state.barListUpdated &&
             this.state.barId.map((item, i) => (
               <Card key={i}>
-                <Card.Header className="barListHeader">
+                <Card.Header
+                  className="barListHeader"
+                  onClick={() => this.toggleButtonHandler(item)}
+                >
                   <Accordion.Toggle
                     as={Card.Header}
                     eventKey={i}
@@ -117,13 +160,25 @@ class BarList extends Component {
                     <div className="barListBodyText">
                       Zip: {this.state.barZip[i]}
                     </div>
-                    <Button className="barListBeerButton">Beerlist</Button>
                     <Button
                       className="barListEditButton"
                       onClick={() => this.showEditBar(item)}
                     >
                       Edit bar
                     </Button>
+                    <div className="barListBeersHeader">Beers:</div>
+                    <ListGroup className="barListBeersList">
+                      {this.state.beerListUpdated &&
+                        this.state.beerId.map((item, i) => (
+                          <ListGroup.Item className="barListBeersListItem">
+                            {this.state.beerBrand[i]} {this.state.beerName[i]},{" "}
+                            {this.state.beerAlcPct[i]} %
+                            <span className="barListBeerPrice">
+                              {this.state.beerPrice[i]} €
+                            </span>
+                          </ListGroup.Item>
+                        ))}
+                    </ListGroup>
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
