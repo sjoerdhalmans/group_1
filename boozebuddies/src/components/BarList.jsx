@@ -3,16 +3,19 @@ import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
 import "./BarList.css";
 import axios from "axios";
 import EditBar from "./EditBar";
+import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
 
 class BarList extends Component {
   state = {
     editBarState: false,
     addBarState: false,
+    addBeerState: false,
     selectedBarId: 0,
     barListUpdated: false,
     beerListUpdated: false,
     toggleState: false,
+    lastToggleBarId: 0,
     bars: [],
     barId: [],
     barName: [],
@@ -67,20 +70,40 @@ class BarList extends Component {
   }
 
   toggleButtonHandler = (barIdParam) => {
-    if (this.state.toggleState === false) {
-      this.setState({ toggleState: true });
-      this.getBarBeers(barIdParam);
+    if (
+      this.state.toggleState === true &&
+      this.state.lastToggleBarId !== barIdParam
+    ) {
+      this.setState(
+        {
+          beerId: [],
+          beerName: [],
+          beerPrice: [],
+          beerBrand: [],
+          beerAlcPct: [],
+        },
+        () => {
+          this.getBarBeers(barIdParam);
+        }
+      );
     } else {
-      this.setState({
-        toggleState: false,
-        beerId: [],
-        beerName: [],
-        beerPrice: [],
-        beerBrand: [],
-        beerAlcPct: [],
-        beerListUpdated: false,
-      });
+      if (this.state.toggleState === false) {
+        this.setState({ toggleState: true });
+        this.getBarBeers(barIdParam);
+      } else {
+        this.setState({
+          toggleState: false,
+          beerId: [],
+          beerName: [],
+          beerPrice: [],
+          beerBrand: [],
+          beerAlcPct: [],
+          beerListUpdated: false,
+        });
+      }
     }
+
+    this.setState({ lastToggleBarId: barIdParam });
   };
 
   hideButtonHandler = () => {
@@ -99,9 +122,16 @@ class BarList extends Component {
     this.getBars();
   };
 
-  showEditBar = (param) => {
-    this.setState({ selectedBarId: param });
-    this.setState({ editBarState: true });
+  addBeerCallBack = () => {
+    this.setState({
+      addBeerState: false,
+      beerId: [],
+      beerName: [],
+      beerPrice: [],
+      beerBrand: [],
+      beerAlcPct: [],
+    });
+    this.getBarBeers(this.state.lastToggleBarId);
   };
 
   addBarCallBack = () => {
@@ -114,6 +144,16 @@ class BarList extends Component {
       barZip: [],
     });
     this.getBars();
+  };
+
+  showEditBar = (param) => {
+    this.setState({ selectedBarId: param });
+    this.setState({ editBarState: true });
+  };
+
+  showAddBeer = (param) => {
+    this.setState({ selectedBarId: param });
+    this.setState({ addBeerState: true });
   };
 
   showAddBar = () => {
@@ -166,11 +206,20 @@ class BarList extends Component {
                     >
                       Edit bar
                     </Button>
+                    <Button
+                      className="barListAddBeerButton"
+                      onClick={() => this.showAddBeer(item)}
+                    >
+                      Add beers
+                    </Button>
                     <div className="barListBeersHeader">Beers:</div>
                     <ListGroup className="barListBeersList">
                       {this.state.beerListUpdated &&
                         this.state.beerId.map((item, i) => (
-                          <ListGroup.Item className="barListBeersListItem">
+                          <ListGroup.Item
+                            key={i}
+                            className="barListBeersListItem"
+                          >
                             {this.state.beerBrand[i]} {this.state.beerName[i]},{" "}
                             {this.state.beerAlcPct[i]} %
                             <span className="barListBeerPrice">
@@ -188,6 +237,13 @@ class BarList extends Component {
           <EditBar
             editBarId={this.state.selectedBarId}
             callBack={this.editBarCallBack}
+          />
+        )}
+
+        {this.state.addBeerState && (
+          <AddBeerToBar
+            addBeerBarId={this.state.selectedBarId}
+            callBack={this.addBeerCallBack}
           />
         )}
 

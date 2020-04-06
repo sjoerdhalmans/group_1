@@ -34,6 +34,7 @@ class App extends Component {
         this.setState({ getUserEmail: res.data.email });
         this.setState({ getUserId: res.data.id });
         this.setState({ getUserName: res.data.name });
+        console.log(res);
         console.log(this.state);
         this.testIfNewAccount();
       });

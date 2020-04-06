@@ -31,9 +31,8 @@ class NewProfileForm extends Component {
         .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
         .then((res) => {
           console.log(res.data);
+          this.handleModalClose();
         });
-
-      this.props.callBack();
     } else {
       this.setState({ inputError: true });
     }
