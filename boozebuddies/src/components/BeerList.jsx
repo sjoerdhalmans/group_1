@@ -71,6 +71,7 @@ class BeerList extends Component {
     //if(!this.state.getBeersCalled)
     this.getBeers();
     this.sortListBy(this.state.listOrder);
+
   }
 
 
@@ -96,8 +97,15 @@ class BeerList extends Component {
       //let newBeer = new Beer(456, "testName", "testBrand", 45);
       //this.addNewBeer(newBeer.name, newBeer.brand, newBeer.alcoholPercentage);
       this.addNewBeer(this.state.addBeerName, this.state.addBeerBrand, this.state.addBeerAlcoholPercentage);
+    }
 
-
+    if(prevState.listFilter != this.state.listFilter ||
+      prevState.listOrder != this.state.listOrder ||
+      prevState.beerArray != this.state.beerArray||
+      this.state.reverseListOrder == true
+      )
+    {
+      this.filterListBy(this.state.listFilter);
     }
 
   }
@@ -121,7 +129,11 @@ class BeerList extends Component {
           newBeersArray.push(beer);
         });
 
-        //this.state.beerArrayFiltered = this.filterListByNamePart(this.state.listFilter); //beerArray can be filtered
+        //this.state.beerArrayFiltered = this.filterListBy(this.state.listFilter); //beerArray can be filtered
+        if( this.state.listFilter == null || this.state.listFilter.length == 0)
+        {
+          this.setState({ beerArrayFiltered: newBeersArray });
+        }
 
         this.setState({ beerArray: newBeersArray });
       })
@@ -213,16 +225,16 @@ class BeerList extends Component {
 
 
 
-    filterListByNamePart(text) //returns beerArray with only beers which name contains given parameter(string)
+    filterListBy(text) //returns beerArray with only beers which name contains given parameter(string)
     {
-      if(text !=null && text.length)
+      if(text !=null && text.length > 0)
       {
-        let filteredArray = this.state.beerArray.filter(beer => beer.name.includes(text))
-        return filteredArray
+        let newFilteredArray = this.state.beerArray.filter(beer => beer.brand.toLowerCase().includes(text.toLowerCase()))
+        this.setState({beerArrayFiltered: newFilteredArray})
       }
       else
       {
-        return this.state.beerArray
+        this.setState({beerArrayFiltered: this.state.beerArray})
       }
     }
 
@@ -262,6 +274,12 @@ class BeerList extends Component {
       this.setState({addBeerState: true})
     }
 
+//filter change handleRedirectCallback
+
+      filterListChangeHandler  = event => {
+        this.setState({ listFilter: event.target.value });
+      };
+
 //Add Beer Change handlers
     addBeerBrandChangeHandler = event => {
       this.setState({ addBeerBrand: event.target.value });
@@ -274,6 +292,8 @@ class BeerList extends Component {
     addBeerAlcoholPercentageChangeHandler = event => {
       this.setState({ addBeerAlcoholPercentage: event.target.value });
     };
+
+
 
 
 
@@ -320,9 +340,12 @@ class BeerList extends Component {
           reverse
         </Button>
 
+        <label>Filter:</label>
+        <input id="idInputAddBrand" type="text" onChange={this.filterListChangeHandler} />
 
 
-        {this.state.beerArray.map(beer => (
+
+        {this.state.beerArrayFiltered.map(beer => (
         <ul key={beer.id}>
           {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
         </ul>
