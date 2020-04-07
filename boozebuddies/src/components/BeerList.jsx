@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { Button, ListGroup } from "react-bootstrap";
 //import "./FriendList.css";
+import "./BarList.css";
 
 
 
@@ -63,6 +64,14 @@ class BeerList extends Component {
       };
   }
 
+//callBacks
+/*
+  hideBeerListCallBack = () => {
+    this.props.hideBeerListCallBack();
+  };
+*/
+
+
 
 //Fuctions
   componentDidMount()
@@ -71,7 +80,6 @@ class BeerList extends Component {
     //if(!this.state.getBeersCalled)
     this.getBeers();
     this.sortListBy(this.state.listOrder);
-
   }
 
 
@@ -141,7 +149,7 @@ class BeerList extends Component {
 
 
 
-    //async addNewBeer(newName, newBrand, newAlcoholPercentage)
+    
     async addNewBeer()
     {
       this.setState({addBeerState:false})
@@ -239,6 +247,12 @@ class BeerList extends Component {
     }
 
 //ButtonClick functions
+    hideButtonClicked = () => {
+          this.props.hideBeerListCallBack();
+    };
+
+
+
     sortByNameClicked(event)
     {
       event.preventDefault()
@@ -274,11 +288,12 @@ class BeerList extends Component {
       this.setState({addBeerState: true})
     }
 
-//filter change handleRedirectCallback
 
-      filterListChangeHandler  = event => {
-        this.setState({ listFilter: event.target.value });
-      };
+
+//filter change handler
+    filterListChangeHandler  = event => {
+      this.setState({ listFilter: event.target.value });
+    };
 
 //Add Beer Change handlers
     addBeerBrandChangeHandler = event => {
@@ -306,6 +321,13 @@ class BeerList extends Component {
     return(
 
       <React.Fragment>
+
+      <Button
+        type="submit"
+        onClick={this.hideButtonClicked}
+      >
+        Hide
+      </Button>
 
         <h4>Beerlist</h4>
 
