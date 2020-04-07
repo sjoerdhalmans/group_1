@@ -4,6 +4,12 @@
     top:5px;
 }
 
+.acceptButton {
+    position:absolute;
+    right:50px;
+    top:5px;
+}
+
 
 .flexContainer {
     width: 1920px;

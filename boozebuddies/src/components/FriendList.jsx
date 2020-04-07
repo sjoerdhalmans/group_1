@@ -8,15 +8,18 @@ class FriendList extends Component {
   constructor(props) {
     super(props);
 
+    
+
     this.state = {
       getFriendsCalled: false,
       friendListUpdated: false,
 
       userEmail: props.flist,
 
-      friendId: [123],
-      friendName: ["testNameForDebug"],
-      friendEmail: ["testEmail@debug"],
+      relationshipId: [0],
+      friendId: [0],
+      friendName: [],
+      friendEmail: [],
       addFriendState: false
     };
 
@@ -29,19 +32,22 @@ class FriendList extends Component {
 
   //Functions
   async getFriends() {
+
     await axios
-      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .get("http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/59")
       .then(res => {
         console.log(res);
 
-        res.data.forEach(item => {
-          this.state.friendId.push(item.id);
-          this.state.friendName.push(item.name);
-          this.state.friendEmail.push(item.email);
+        res.data.relationships.forEach(item => {
+          this.state.relationshipId.push(item.id)
+          this.state.friendId.push(item.userTwoId.id);
+          this.state.friendName.push(item.userTwoId.name);
+          this.state.friendEmail.push(item.userTwoId.email);
 
           console.log(item.id);
-          console.log(item.name);
-          console.log(item.email);
+          console.log(item.userTwoId.id);
+          console.log(item.userTwoId.name);
+          console.log(item.userTwoId.email);
 
           this.setState({ friendListUpdated: true });
         });
@@ -50,6 +56,52 @@ class FriendList extends Component {
 
   removeFriendHandler = i => {
     console.log(i);
+    let deleteRelationshipBody = {
+      id: this.state.relationshipId,
+      status: "pending",
+      userOneId: {
+        email: this.props.userEmail,
+        id: this.props.userId,
+        name: this.props.userName
+      },
+      userTwoId: {
+        email: this.state.friendEmail,
+        id: this.state.friendId,
+        name: this.state.friendName
+      }
+    };
+
+    axios
+      .delete("http://217.101.44.31:8082/api/public/friend/deleteRelationship", deleteRelationshipBody)
+      .then(res => {
+        console.log(res.data);
+        console.log(deleteRelationshipBody);
+      });
+  };
+
+  acceptFriendHandler = i => {
+    console.log(i);
+    let updateRelationshipStatusBody = {
+      id: this.state.relationshipId,
+      status: "accepted",
+      userOneId: {
+        email: this.props.userEmail,
+        id: this.props.userId,
+        name: this.props.userName
+      },
+      userTwoId: {
+        email: this.state.friendEmail,
+        id: this.state.friendId,
+        name: this.state.friendName
+      }
+    };
+
+    axios
+      .put("http://217.101.44.31:8082/api/public/friend/updateRelationshipStatus", updateRelationshipStatusBody)
+      .then(res => {
+        console.log(res.data);
+        console.log(updateRelationshipStatusBody);
+      });
   };
 
   hideButtonHandler = () => {
@@ -86,16 +138,16 @@ class FriendList extends Component {
                 className="friendListBG"
                 action
                 as="li"
-                key={item}
-              >
+                key={item}>
                 {item}
+                <Button
+                  onClick={() => this.acceptFriendHandler(item)}
+                  variant="success"
+                  className="acceptButton">V</Button>
                 <Button
                   onClick={() => this.removeFriendHandler(item)}
                   variant="danger"
-                  className="removeButton"
-                >
-                  X
-                </Button>
+                  className="removeButton">X</Button>
               </ListGroup.Item>
             ))}
           <Button

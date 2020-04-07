@@ -7,7 +7,7 @@ import Modal from "react-bootstrap/Modal";
 class NewProfileForm extends Component {
   state = {
     newAccountName: "",
-    showModal: true
+    showModal: false
   };
 
   nameChangeHandler = event => {
@@ -28,6 +28,7 @@ class NewProfileForm extends Component {
       });
 
     this.props.callBack();
+    this.setState({ showModal: false});
   };
 
   handleModalClose = () => {

@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import Login from "./components/Login";
-import NewProfileForm from "./components/NewProfileForm";
-import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
-import FriendList from "./components/FriendList";
 import { Navbar, Nav, Form, } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style.css';
+
+import AddFriend from "./components/AddFriend";
+import NewProfileForm from "./components/NewProfileForm";
+import ChangeUsername from "./components/ChangeUsername";
+import FriendList from "./components/FriendList";
+import Login from "./components/Login";
 
 class App extends Component {
   state = {
@@ -18,7 +20,8 @@ class App extends Component {
     getUserStatus: 0,
     isNewAccount: false,
     showFriendsState: false,
-    changeUsernameState: false
+    changeUsernameState: false,
+    addFriendState: false
   };
 
   async getUserByEmail() {
@@ -106,6 +109,9 @@ class App extends Component {
         <div className="friendList">
         {this.state.showFriendsState && (
           <FriendList
+            userId={this.state.getUserId}
+            userName={this.state.getUserName}
+            userStatus={this.state.getUserStatus}
             flist={this.state.getUserEmail}
             callBack={this.hideButtonCallBack}
           />
@@ -116,6 +122,14 @@ class App extends Component {
           <ChangeUsername
             userId={this.state.getUserId}
             callBack={this.changeUsernameCallBack}
+          />
+        )}
+
+        {this.state.addFriendState && (
+          <AddFriend
+            userId={this.state.getUserId}
+            userName={this.state.getUserName}
+            userEmail={this.state.getUserEmail}
           />
         )}
 
