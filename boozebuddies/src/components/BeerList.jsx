@@ -149,7 +149,7 @@ class BeerList extends Component {
 
 
 
-    //async addNewBeer(newName, newBrand, newAlcoholPercentage)
+    
     async addNewBeer()
     {
       this.setState({addBeerState:false})
