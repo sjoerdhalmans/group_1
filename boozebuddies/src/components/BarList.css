@@ -1,0 +1,132 @@
+.barsHeader {
+  color: orange;
+  font-size: 30px;
+  letter-spacing: 0.05em;
+  height: 50px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.addBarButton {
+  position: absolute;
+  right: 85px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.addBarButton:hover,
+.addBarButton:focus,
+.addBarButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.barsHideButton {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.barsHideButton:hover,
+.barsHideButton:focus,
+.barsHideButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.barList {
+  border-style: solid;
+  border-color: rgb(204, 92, 0);
+  position: absolute;
+  width: 235px;
+  color: white;
+  background-color: rgb(32, 32, 32);
+}
+
+.barListHeader {
+  background-color: rgb(32, 32, 32);
+}
+
+.barListToggle {
+  color: orange;
+  font-size: 22px;
+}
+
+.barListBody {
+  background-color: rgb(32, 32, 32);
+}
+
+.barListBodyText {
+  position: relative;
+  top: -20px;
+  color: orange;
+  font-size: 18px;
+}
+
+.barListBeersHeader {
+  position: relative;
+  top: -50px;
+  color: orange;
+  font-size: 20px;
+}
+
+.barListBeersList {
+  position: relative;
+  top: -40px;
+}
+
+.barListBeersListItem {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: rgb(204, 92, 0);
+}
+
+.barListBeerPrice {
+  position: absolute;
+  right: 20px;
+}
+
+.barListEditButton {
+  position: relative;
+  right: -91.25%;
+  bottom: 100px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+}
+
+.barListEditButton:hover,
+.barListEditButton:focus,
+.barListEditButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.barListAddBeerButton {
+  position: relative;
+  right: -81%;
+  bottom: 50px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+}
+
+.barListAddBeerButton:hover,
+.barListAddBeerButton:focus,
+.barListAddBeerButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}

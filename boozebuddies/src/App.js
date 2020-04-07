@@ -4,9 +4,10 @@ import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
 import FriendList from "./components/FriendList";
-import { Navbar, Nav, Form, } from "react-bootstrap";
+import BarList from "./components/BarList";
+import { Navbar, Nav, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './style.css';
+import "./style.css";
 import BeerList from "./components/BeerList";
 
 class App extends Component {
@@ -20,7 +21,7 @@ class App extends Component {
     isNewAccount: false,
     showFriendsState: false,
     changeUsernameState: false,
-
+    barListState: false,
     barId: 0
   };
 
@@ -30,11 +31,12 @@ class App extends Component {
         "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
           this.state.newAccountEmail
       )
-      .then(res => {
+      .then((res) => {
         this.setState({ getUserStatus: res.status });
         this.setState({ getUserEmail: res.data.email });
         this.setState({ getUserId: res.data.id });
         this.setState({ getUserName: res.data.name });
+        console.log(res);
         console.log(this.state);
         this.testIfNewAccount();
       });
@@ -46,7 +48,7 @@ class App extends Component {
     }
   }
 
-  loginCallBack = childData => {
+  loginCallBack = (childData) => {
     this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
     this.setState({ loggedIn: true });
   };
@@ -63,6 +65,10 @@ class App extends Component {
     this.setState({ showFriendsState: false });
   };
 
+  barListCallBack = () => {
+    this.setState({ barListState: false });
+  };
+
   showFriends = () => {
     this.setState({ showFriendsState: true });
   };
@@ -71,13 +77,22 @@ class App extends Component {
     this.setState({ changeUsernameState: true });
   };
 
+  showBarList = () => {
+    this.setState({ barListState: true });
+  };
+
   render() {
     return (
       <div className="flexContainer">
         <Navbar className="navBar" expand="lg">
-          <h2 className="navBarTitle" href="#home">Boozebuddies</h2>
+          <h2 className="navBarTitle" href="#home">
+            Boozebuddies
+          </h2>
           {this.state.loggedIn && (
             <div>
+              <Nav.Link href="#bars" onClick={() => this.showBarList()}>
+                Bars
+              </Nav.Link>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
                 Friends
               </Nav.Link>
@@ -106,13 +121,19 @@ class App extends Component {
           />
         )}
 
+        <div className="barList">
+          {this.state.barListState && (
+            <BarList callBack={this.barListCallBack} />
+          )}
+        </div>
+
         <div className="friendList">
-        {this.state.showFriendsState && (
-          <FriendList
-            flist={this.state.getUserEmail}
-            callBack={this.hideButtonCallBack}
-          />
-        )}
+          {this.state.showFriendsState && (
+            <FriendList
+              flist={this.state.getUserEmail}
+              callBack={this.hideButtonCallBack}
+            />
+          )}
         </div>
 
         {this.state.loggedIn && (

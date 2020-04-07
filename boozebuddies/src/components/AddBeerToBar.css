@@ -1,0 +1,102 @@
+.addBeerToBarModalHeader {
+  color: rgb(204, 92, 0);
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addBeerToBarModalBody1 {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+}
+
+.addBeerToBarModalBody2 {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+  max-height: 700px;
+  overflow-y: auto;
+}
+
+.addBeerToBarList {
+  max-height: 700px;
+  overflow-y: auto;
+}
+
+.addBeerToBarListItem {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: rgb(204, 92, 0);
+}
+
+.addBeerToBarListItem:hover {
+  background-color: rgb(197, 147, 38);
+  color: black;
+}
+
+.addBeerToBarListItem:focus,
+.addBeerToBarListItem:active {
+  background-color: orange;
+  color: black;
+  border-color: rgb(204, 92, 0);
+}
+
+.addBeerToBarPriceInput {
+  position: absolute;
+  top: 10px;
+  left: 17px;
+  width: 150px;
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addBeerToBarPriceInput:hover,
+.addBeerToBarPriceInput:focus,
+.addBeerToBarPriceInput:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addBeerToBarButton {
+  position: absolute;
+  top: 10px;
+  left: 175px;
+  background: rgb(0, 167, 22);
+  color: white;
+  border-color: rgb(0, 167, 22);
+}
+
+.addBeerToBarButton:hover,
+.addBeerToBarButton:focus,
+.addBeerToBarButton:active {
+  background: rgb(0, 201, 27);
+  color: white;
+  border-color: rgb(0, 201, 27);
+}
+
+.addBeerToBarModalFooter {
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addBeerToBarConfirm {
+  color: rgb(0, 201, 27);
+}
+
+.addBeerToBarOkButton {
+  right: 5px;
+  top: 5px;
+  color: white;
+  background-color: rgb(204, 92, 0);
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.addBeerToBarOkButton:hover,
+.addBeerToBarOkButton:focus,
+.addBeerToBarOkButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
