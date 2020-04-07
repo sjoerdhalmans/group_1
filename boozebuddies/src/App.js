@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Navbar, Nav, Form, } from "react-bootstrap";
+import { Navbar, Nav, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './style.css';
-
-import AddFriend from "./components/AddFriend";
+import "./style.css";
 import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import FriendList from "./components/FriendList";
@@ -21,7 +19,6 @@ class App extends Component {
     isNewAccount: false,
     showFriendsState: false,
     changeUsernameState: false,
-    addFriendState: false
   };
 
   async getUserByEmail() {
@@ -30,7 +27,7 @@ class App extends Component {
         "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
           this.state.newAccountEmail
       )
-      .then(res => {
+      .then((res) => {
         this.setState({ getUserStatus: res.status });
         this.setState({ getUserEmail: res.data.email });
         this.setState({ getUserId: res.data.id });
@@ -46,7 +43,7 @@ class App extends Component {
     }
   }
 
-  loginCallBack = childData => {
+  loginCallBack = (childData) => {
     this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
     this.setState({ loggedIn: true });
   };
@@ -75,7 +72,9 @@ class App extends Component {
     return (
       <div className="flexContainer">
         <Navbar className="navBar" expand="lg">
-          <h2 className="navBarTitle" href="#home">Boozebuddies</h2>
+          <h2 className="navBarTitle" href="#home">
+            Boozebuddies
+          </h2>
           {this.state.loggedIn && (
             <div>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
@@ -107,29 +106,20 @@ class App extends Component {
         )}
 
         <div className="friendList">
-        {this.state.showFriendsState && (
-          <FriendList
-            userId={this.state.getUserId}
-            userName={this.state.getUserName}
-            userStatus={this.state.getUserStatus}
-            flist={this.state.getUserEmail}
-            callBack={this.hideButtonCallBack}
-          />
-        )}
+          {this.state.showFriendsState && (
+            <FriendList
+              userId={this.state.getUserId}
+              userName={this.state.getUserName}
+              userEmail={this.state.getUserEmail}
+              callBack={this.hideButtonCallBack}
+            />
+          )}
         </div>
 
         {this.state.changeUsernameState && (
           <ChangeUsername
             userId={this.state.getUserId}
             callBack={this.changeUsernameCallBack}
-          />
-        )}
-
-        {this.state.addFriendState && (
-          <AddFriend
-            userId={this.state.getUserId}
-            userName={this.state.getUserName}
-            userEmail={this.state.getUserEmail}
           />
         )}
 

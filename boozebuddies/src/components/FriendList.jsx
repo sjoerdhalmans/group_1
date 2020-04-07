@@ -5,103 +5,153 @@ import "./FriendList.css";
 import AddFriend from "./AddFriend";
 
 class FriendList extends Component {
-  constructor(props) {
-    super(props);
-
-    
-
-    this.state = {
-      getFriendsCalled: false,
-      friendListUpdated: false,
-
-      userEmail: props.flist,
-
-      relationshipId: [0],
-      friendId: [0],
-      friendName: [],
-      friendEmail: [],
-      addFriendState: false
-    };
-
-    //this.state = {  }
-
-    console.log("Friendlist props");
-    console.log(props.flist);
-    //console.log(typeof(this.state.userEmail));
-  }
-
-  //Functions
-  async getFriends() {
-
-    await axios
-      .get("http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/59")
-      .then(res => {
-        console.log(res);
-
-        res.data.relationships.forEach(item => {
-          this.state.relationshipId.push(item.id)
-          this.state.friendId.push(item.userTwoId.id);
-          this.state.friendName.push(item.userTwoId.name);
-          this.state.friendEmail.push(item.userTwoId.email);
-
-          console.log(item.id);
-          console.log(item.userTwoId.id);
-          console.log(item.userTwoId.name);
-          console.log(item.userTwoId.email);
-
-          this.setState({ friendListUpdated: true });
-        });
-      });
-  }
-
-  removeFriendHandler = i => {
-    console.log(i);
-    let deleteRelationshipBody = {
-      id: this.state.relationshipId,
-      status: "pending",
-      userOneId: {
-        email: this.props.userEmail,
-        id: this.props.userId,
-        name: this.props.userName
-      },
-      userTwoId: {
-        email: this.state.friendEmail,
-        id: this.state.friendId,
-        name: this.state.friendName
-      }
-    };
-
-    axios
-      .delete("http://217.101.44.31:8082/api/public/friend/deleteRelationship", deleteRelationshipBody)
-      .then(res => {
-        console.log(res.data);
-        console.log(deleteRelationshipBody);
-      });
+  state = {
+    friendListUpdated: false,
+    userId: this.props.userId,
+    userName: this.props.userName,
+    userEmail: this.props.userEmail,
+    acceptedFriendsId: [],
+    acceptedFriends: [],
+    youAdded: [],
+    requestedFriendNames: [],
+    friendRequestId: [],
+    friendRequest: [],
+    deleteFriendBody: {},
+    addFriendState: false,
   };
 
-  acceptFriendHandler = i => {
-    console.log(i);
-    let updateRelationshipStatusBody = {
-      id: this.state.relationshipId,
-      status: "accepted",
-      userOneId: {
-        email: this.props.userEmail,
-        id: this.props.userId,
-        name: this.props.userName
-      },
-      userTwoId: {
-        email: this.state.friendEmail,
-        id: this.state.friendId,
-        name: this.state.friendName
-      }
-    };
+  componentDidMount() {
+    this.getFriends();
+  }
 
-    axios
-      .put("http://217.101.44.31:8082/api/public/friend/updateRelationshipStatus", updateRelationshipStatusBody)
-      .then(res => {
-        console.log(res.data);
-        console.log(updateRelationshipStatusBody);
+  async getFriends() {
+    await axios
+      .get(
+        "http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/" +
+          this.state.userId
+      )
+      .then((res) => {
+        res.data.relationships.forEach((item) => {
+          if (item.status === "accepted") {
+            if (item.userOneId.id === this.state.userId) {
+              this.state.acceptedFriendsId.push(item.id);
+              this.state.acceptedFriends.push(item.userTwoId);
+              this.state.youAdded.push(true);
+            } else {
+              this.state.acceptedFriendsId.push(item.id);
+              this.state.acceptedFriends.push(item.userOneId);
+              this.state.youAdded.push(false);
+            }
+          } else if (item.status === "pending") {
+            if (item.userOneId.id === this.state.userId) {
+              this.state.requestedFriendNames.push(item.userTwoId.name);
+            } else {
+              this.state.friendRequestId.push(item.id);
+              this.state.friendRequest.push(item.userOneId);
+            }
+          }
+        });
+        this.setState({ friendListUpdated: true });
       });
+  }
+
+  deleteFriend(i) {
+    if (this.state.youAdded[i] === true) {
+      this.setState(
+        {
+          deleteFriendBody: {
+            id: this.state.acceptedFriendsId[i],
+            status: "accepted",
+            userOneId: {
+              email: this.state.userEmail,
+              id: this.state.userId,
+              name: this.state.userName,
+            },
+            userTwoId: {
+              email: this.state.acceptedFriends[i].email,
+              id: this.state.acceptedFriends[i].id,
+              name: this.state.acceptedFriends[i].name,
+            },
+          },
+        },
+        () => this.deleteFriendCall()
+      );
+    } else {
+      this.setState(
+        {
+          deleteFriendBody: {
+            id: this.state.acceptedFriendsId[i],
+            status: "accepted",
+            userOneId: {
+              email: this.state.acceptedFriends[i].email,
+              id: this.state.acceptedFriends[i].id,
+              name: this.state.acceptedFriends[i].name,
+            },
+            userTwoId: {
+              email: this.state.userEmail,
+              id: this.state.userId,
+              name: this.state.userName,
+            },
+          },
+        },
+        () => this.deleteFriendCall()
+      );
+    }
+  }
+
+  deleteFriendCall() {
+    axios({
+      method: "delete",
+      url: "http://217.101.44.31:8082/api/public/friend/deleteRelationship",
+      headers: {},
+      data: this.state.deleteFriendBody,
+    }).then((res) => {
+      console.log(res);
+      this.resetFriendList();
+    });
+  }
+
+  acceptFriendRequest(i) {
+    axios({
+      method: "put",
+      url:
+        "http://217.101.44.31:8082/api/public/friend/updateRelationshipStatus",
+      headers: {},
+      data: {
+        id: this.state.friendRequestId[i],
+        status: "accepted",
+        userOneId: {
+          email: this.state.friendRequest[i].email,
+          id: this.state.friendRequest[i].id,
+          name: this.state.friendRequest[i].name,
+        },
+        userTwoId: {
+          email: this.state.userEmail,
+          id: this.state.userId,
+          name: this.state.userName,
+        },
+      },
+    }).then((res) => {
+      console.log(res);
+      this.resetFriendList();
+    });
+  }
+
+  resetFriendList = () => {
+    this.setState(
+      {
+        friendListUpdated: false,
+        acceptedFriendsId: [],
+        acceptedFriends: [],
+        youAdded: [],
+        requestedFriendNames: [],
+        friendRequestId: [],
+        friendRequest: [],
+      },
+      () => {
+        this.getFriends();
+      }
+    );
   };
 
   hideButtonHandler = () => {
@@ -109,21 +159,16 @@ class FriendList extends Component {
   };
 
   addFriendCallBack = () => {
-    this.setState({ addFriendState: false });
+    this.setState({ friendListUpdated: false, addFriendState: false }, () => {
+      this.resetFriendList();
+    });
   };
 
-  addFriend = () => {
+  showAddFriend = () => {
     this.setState({ addFriendState: true });
   };
 
-  //Render
   render() {
-    if (this.state.userEmail !== "" && this.state.getFriendsCalled === false) {
-      this.setState({ getFriendsCalled: true });
-
-      this.getFriends();
-    }
-
     return (
       <div>
         <h4 className="friendsHeader">Friends</h4>
@@ -131,36 +176,60 @@ class FriendList extends Component {
         <Button className="hideButton" onClick={() => this.hideButtonHandler()}>
           Hide
         </Button>
-        <ListGroup as="ul">
-          {this.state.friendListUpdated &&
-            this.state.friendName.map(item => (
-              <ListGroup.Item
-                className="friendListBG"
-                action
-                as="li"
-                key={item}>
-                {item}
+        {this.state.friendListUpdated &&
+          this.state.acceptedFriendsId.map((item, i) => (
+            <ListGroup key={item}>
+              <ListGroup.Item className="friendListItem" key={item}>
+                {this.state.acceptedFriends[i].name}
                 <Button
-                  onClick={() => this.acceptFriendHandler(item)}
-                  variant="success"
-                  className="acceptButton">V</Button>
-                <Button
-                  onClick={() => this.removeFriendHandler(item)}
+                  onClick={() => this.deleteFriend(i)}
                   variant="danger"
-                  className="removeButton">X</Button>
+                  className="friendListRemoveButton"
+                >
+                  Delete
+                </Button>
               </ListGroup.Item>
-            ))}
-          <Button
-            className="addFriendButton"
-            type="submit"
-            onClick={() => this.addFriend()}
-          >
-            Add Friend
-          </Button>
-        </ListGroup>
+            </ListGroup>
+          ))}
+        <div className="friendRequestsHeader">Friend requests:</div>
+        {this.state.friendListUpdated &&
+          this.state.friendRequestId.map((item, i) => (
+            <ListGroup key={item}>
+              <ListGroup.Item className="friendListItem" key={item}>
+                {this.state.friendRequest[i].name}
+                <Button
+                  onClick={() => this.acceptFriendRequest(i)}
+                  variant="success"
+                  className="friendListAcceptButton"
+                >
+                  Accept
+                </Button>
+              </ListGroup.Item>
+            </ListGroup>
+          ))}
+        <div className="sentRequestsHeader">Your sent requests:</div>
+        {this.state.friendListUpdated &&
+          this.state.requestedFriendNames.map((item) => (
+            <ListGroup key={item}>
+              <ListGroup.Item className="friendListItem" key={item}>
+                {item}
+              </ListGroup.Item>
+            </ListGroup>
+          ))}
+        <Button
+          className="addFriendButton"
+          onClick={() => this.showAddFriend()}
+        >
+          Add Friend
+        </Button>
 
         {this.state.addFriendState && (
-          <AddFriend callBack={this.addFriendCallBack} />
+          <AddFriend
+            userId={this.state.userId}
+            userName={this.state.userName}
+            userEmail={this.state.userEmail}
+            callBack={this.addFriendCallBack}
+          />
         )}
       </div>
     );
