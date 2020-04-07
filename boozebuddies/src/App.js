@@ -22,7 +22,7 @@ class App extends Component {
     showFriendsState: false,
     changeUsernameState: false,
     barListState: false,
-    barId: 0
+    barId: 0,
   };
 
   async getUserByEmail() {
@@ -32,13 +32,19 @@ class App extends Component {
           this.state.newAccountEmail
       )
       .then((res) => {
-        this.setState({ getUserStatus: res.status });
-        this.setState({ getUserEmail: res.data.email });
-        this.setState({ getUserId: res.data.id });
-        this.setState({ getUserName: res.data.name });
+        this.setState(
+          {
+            getUserStatus: res.status,
+            getUserEmail: res.data.email,
+            getUserId: res.data.id,
+            getUserName: res.data.name,
+          },
+          () => {
+            this.testIfNewAccount();
+          }
+        );
         console.log(res);
         console.log(this.state);
-        this.testIfNewAccount();
       });
   }
 
@@ -108,7 +114,9 @@ class App extends Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto"></Nav>
             <Form inline>
-              <Nav.Link href="#profile">{this.state.getUserName}</Nav.Link>
+              {this.state.loggedIn && (
+                <Nav.Link href="#profile">{this.state.getUserName}</Nav.Link>
+              )}
               <Login callBack={this.loginCallBack} />
             </Form>
           </Navbar.Collapse>
@@ -139,13 +147,10 @@ class App extends Component {
         </div>
 
         {this.state.loggedIn && (
-        <div className="beerList">
-        <BeerList
-          barid={this.barId}
-        />
-        </div>
+          <div className="beerList">
+            <BeerList barid={this.barId} />
+          </div>
         )}
-
 
         {this.state.changeUsernameState && (
           <ChangeUsername
