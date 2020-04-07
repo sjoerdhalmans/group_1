@@ -1,0 +1,117 @@
+.editBarModalHeader {
+  color: rgb(204, 92, 0);
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.editBarModalBody {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+}
+
+.editBarModalFooter {
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.editBarOkButton {
+  right: 5px;
+  top: 5px;
+  color: white;
+  background-color: rgb(204, 92, 0);
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.editBarOkButton:hover,
+.editBarOkButton:focus,
+.editBarOkButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.nameTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.nameTextArea:hover,
+.nameTextArea:focus,
+.nameTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addressTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addressTextArea:hover,
+.addressTextArea:focus,
+.addressTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.zipTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.zipTextArea:hover,
+.zipTextArea:focus,
+.zipTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.telTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.telTextArea:hover,
+.telTextArea:focus,
+.telTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.lngTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.lngTextArea:hover,
+.lngTextArea:focus,
+.lngTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.latTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.latTextArea:hover,
+.latTextArea:focus,
+.latTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}

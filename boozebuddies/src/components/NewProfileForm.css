@@ -1,20 +1,20 @@
-.changeUsernameModalHeader {
+.newProfileFormModalHeader {
   color: rgb(204, 92, 0);
   background-color: rgb(32, 32, 32);
   border-color: rgb(204, 92, 0);
 }
 
-.changeUsernameModalBody {
+.newProfileFormModalBody {
   color: orange;
   background-color: rgb(32, 32, 32);
 }
 
-.changeUsernameModalFooter {
+.newProfileFormModalFooter {
   background-color: rgb(32, 32, 32);
   border-color: rgb(204, 92, 0);
 }
 
-.changeUsernameOkButton {
+.newProfileFormOkButton {
   right: 5px;
   top: 5px;
   color: white;
@@ -24,28 +24,28 @@
   letter-spacing: 0.05em;
 }
 
-.changeUsernameOkButton:hover,
-.changeUsernameOkButton:focus,
-.changeUsernameOkButton:active {
+.newProfileFormOkButton:hover,
+.newProfileFormOkButton:focus,
+.newProfileFormOkButton:active {
   background: orange;
   color: #ffffff;
   border-color: orange;
 }
 
-.changeUsernameTextArea {
+.newProfileFormTextArea {
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
 }
 
-.changeUsernameTextArea:hover,
-.changeUsernameTextArea:focus,
-.changeUsernameTextArea:active {
+.newProfileFormTextArea:hover,
+.newProfileFormTextArea:focus,
+.newProfileFormTextArea:active {
   background-color: rgb(32, 32, 32);
   color: orange;
   border-color: orange;
 }
 
-.changeUsernameInputError {
+.newProfileFormInputError {
   color: red;
 }

@@ -1,10 +1,11 @@
-.flexContainer {
-  width: 1920px;
-  height: 977px;
-  position: relative;
+body {
   background-color: black;
-  flex-flow: column wrap;
-  justify-content: right;
+}
+
+.removeButton {
+  position: absolute;
+  right: 10px;
+  top: 5px;
 }
 
 .mainScreen {
@@ -23,6 +24,19 @@
 }
 
 .friendList:empty {
+  display: none;
+}
+
+.barList {
+  margin-top: 20px;
+  left: 23.75%;
+  right: 23.75%;
+  position: absolute;
+  width: 52.5%;
+  color: white;
+}
+
+.barList:empty {
   display: none;
 }
 

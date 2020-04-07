@@ -1,0 +1,93 @@
+.addBarModalHeader {
+  color: rgb(204, 92, 0);
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addBarModalBody {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+}
+
+.addBarModalFooter {
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addBarOkButton {
+  right: 5px;
+  top: 5px;
+  color: white;
+  background-color: rgb(204, 92, 0);
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.addBarOkButton:hover,
+.addBarOkButton:focus,
+.addBarOkButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.addBarNameTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addBarNameTextArea:hover,
+.addBarNameTextArea:focus,
+.addBarNameTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addBarAddressTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addBarAddressTextArea:hover,
+.addBarAddressTextArea:focus,
+.addBarAddressTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addBarZipTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addBarZipTextArea:hover,
+.addBarZipTextArea:focus,
+.addBarZipTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addBarTelTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addBarTelTextArea:hover,
+.addBarTelTextArea:focus,
+.addBarTelTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addBarInputError {
+  color: red;
+}

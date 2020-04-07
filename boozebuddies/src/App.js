@@ -7,6 +7,8 @@ import NewProfileForm from "./components/NewProfileForm";
 import ChangeUsername from "./components/ChangeUsername";
 import FriendList from "./components/FriendList";
 import Login from "./components/Login";
+import BarList from "./components/BarList";
+import BeerList from "./components/BeerList";
 
 class App extends Component {
   state = {
@@ -19,6 +21,8 @@ class App extends Component {
     isNewAccount: false,
     showFriendsState: false,
     changeUsernameState: false,
+    barListState: false,
+    barId: 0
   };
 
   async getUserByEmail() {
@@ -32,6 +36,7 @@ class App extends Component {
         this.setState({ getUserEmail: res.data.email });
         this.setState({ getUserId: res.data.id });
         this.setState({ getUserName: res.data.name });
+        console.log(res);
         console.log(this.state);
         this.testIfNewAccount();
       });
@@ -60,12 +65,20 @@ class App extends Component {
     this.setState({ showFriendsState: false });
   };
 
+  barListCallBack = () => {
+    this.setState({ barListState: false });
+  };
+
   showFriends = () => {
     this.setState({ showFriendsState: true });
   };
 
   changeUsername = () => {
     this.setState({ changeUsernameState: true });
+  };
+
+  showBarList = () => {
+    this.setState({ barListState: true });
   };
 
   render() {
@@ -77,6 +90,9 @@ class App extends Component {
           </h2>
           {this.state.loggedIn && (
             <div>
+              <Nav.Link href="#bars" onClick={() => this.showBarList()}>
+                Bars
+              </Nav.Link>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
                 Friends
               </Nav.Link>
@@ -105,6 +121,12 @@ class App extends Component {
           />
         )}
 
+        <div className="barList">
+          {this.state.barListState && (
+            <BarList callBack={this.barListCallBack} />
+          )}
+        </div>
+
         <div className="friendList">
           {this.state.showFriendsState && (
             <FriendList
@@ -115,6 +137,15 @@ class App extends Component {
             />
           )}
         </div>
+
+        {this.state.loggedIn && (
+        <div className="beerList">
+        <BeerList
+          barid={this.barId}
+        />
+        </div>
+        )}
+
 
         {this.state.changeUsernameState && (
           <ChangeUsername
