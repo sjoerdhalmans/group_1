@@ -26,11 +26,16 @@ class BeerList extends Component {
   {
     super(props);
 
-    //Button function binds
+//Button function binds
+
+    //list order buttons
     this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
     this.sortByNameClicked = this.sortByNameClicked.bind(this);
     this.sortByAlcoholPClicked = this.sortByAlcoholPClicked.bind(this);
     this.sortReverseClicked = this.sortReverseClicked.bind(this);
+
+    //add beer buttons
+    this.addBeerClicked = this.addBeerClicked.bind(this);
 
 
     let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
@@ -48,8 +53,13 @@ class BeerList extends Component {
         reverseListOrder: false,
         listFilter:"",
 
-        barId: props.barId
-        //addBeerState: false
+        barId: props.barId,
+
+        addBeerState: false,
+        addBeerBrand:"",
+        addBeerName:"",
+        addBeerAlcoholPercentage:0
+
       };
   }
 
@@ -81,6 +91,15 @@ class BeerList extends Component {
       this.sortListReverseOrder();
     }
 
+    if(this.state.addBeerState == true)
+    {
+      //let newBeer = new Beer(456, "testName", "testBrand", 45);
+      //this.addNewBeer(newBeer.name, newBeer.brand, newBeer.alcoholPercentage);
+      this.addNewBeer(this.state.addBeerName, this.state.addBeerBrand, this.state.addBeerAlcoholPercentage);
+
+
+    }
+
   }
 
 
@@ -88,10 +107,10 @@ class BeerList extends Component {
 
   async getBeers()
   {
-    let newBeersArray = this.state.beerArray; //creating new array for beer, so setState can be used instead of push
+    //let newBeersArray = this.state.beerArray;
+      let newBeersArray =[];  //creating new array for beer, so setState can be used instead of push
 
     await axios
-      //.get("http://217.101.44.31:8081/api/public/user/getAllUsers") //this will be changed when beerAPI is online
       .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
       .then(res => {
         console.log(res);
@@ -99,7 +118,6 @@ class BeerList extends Component {
         res.data.beers.forEach((item, i) => {
           const beer = new Beer(item.id, item.name, item.brand, item.alcoholPercentage);
 
-        //  this.setState({beerArray: [this.beerArray, beer]})
           newBeersArray.push(beer);
         });
 
@@ -107,6 +125,59 @@ class BeerList extends Component {
 
         this.setState({ beerArray: newBeersArray });
       })
+    }
+
+
+
+    //async addNewBeer(newName, newBrand, newAlcoholPercentage)
+    async addNewBeer()
+    {
+      this.setState({addBeerState:false})
+
+      if(
+        this.state.addBeerName != null && this.state.addBeerName.length > 0 &&
+        this.state.addBeerBrand != null && this.state.addBeerBrand.length > 0 &&
+        this.state.addBeerAlcoholPercentage != null && !isNaN(this.state.addBeerAlcoholPercentage)
+      ){
+                    //console.log("if parameters ok");
+
+                    let addBeerBody =
+                      {
+                      alcoholPercentage: this.state.addBeerAlcoholPercentage,
+                      bars: [],
+                      brand: this.state.addBeerBrand,
+                      id: 0,
+                      name: this.state.addBeerName
+                    };
+
+
+
+                    await axios.post("http://217.101.44.31:8083/api/public/beer/addBeer", addBeerBody )
+                    .then(res => {
+                      console.log(res);
+
+                      this.getBeers();
+                      this.resetAddBeerValues();
+
+
+                    })}
+
+    }
+
+
+    resetAddBeerValues()
+    {
+      this.setState({
+        addBeerName: "",
+        addBeerBrand:"",
+        addBeerAlcoholPercentage:0
+      })
+
+      document.getElementById("idInputAddName").value = "";
+      document.getElementById("idInputAddBrand").value = "";
+      document.getElementById("idInputAddAlcoholPercentage").value = "";
+
+
     }
 
 
@@ -144,7 +215,7 @@ class BeerList extends Component {
 
     filterListByNamePart(text) //returns beerArray with only beers which name contains given parameter(string)
     {
-      if(!null && text !="")
+      if(text !=null && text.length)
       {
         let filteredArray = this.state.beerArray.filter(beer => beer.name.includes(text))
         return filteredArray
@@ -184,7 +255,25 @@ class BeerList extends Component {
     }
 
 
+    addBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({addBeerState: true})
+    }
 
+//Add Beer Change handlers
+    addBeerBrandChangeHandler = event => {
+      this.setState({ addBeerBrand: event.target.value });
+    };
+
+    addBeerNameChangeHandler = event => {
+      this.setState({ addBeerName: event.target.value });
+    };
+
+    addBeerAlcoholPercentageChangeHandler = event => {
+      this.setState({ addBeerAlcoholPercentage: event.target.value });
+    };
 
 
 
@@ -238,6 +327,27 @@ class BeerList extends Component {
           {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
         </ul>
         ))}
+
+        <h4>Add New Beer</h4>
+
+        <form>
+          <p>Brand: {this.state.addBeerBrand}</p>
+          <input id="idInputAddBrand" type="text" onChange={this.addBeerBrandChangeHandler} />
+
+          <p>Name: {this.state.addBeerName}</p>
+          <input id="idInputAddName" type="text" onChange={this.addBeerNameChangeHandler} />
+
+          <p>ABV %: {this.state.addBeerAlcoholPercentage}</p>
+          <input id="idInputAddAlcoholPercentage" type="text" onChange={this.addBeerAlcoholPercentageChangeHandler} />
+
+        </form>
+
+        <Button
+        type="submit"
+        onClick={this.addBeerClicked}
+        >
+        Add New Beer
+        </Button>
 
       </React.Fragment>
     )
