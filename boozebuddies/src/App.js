@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import Login from "./components/Login";
-import NewProfileForm from "./components/NewProfileForm";
-import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
-import FriendList from "./components/FriendList";
-import BarList from "./components/BarList";
 import { Navbar, Nav, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
+import NewProfileForm from "./components/NewProfileForm";
+import ChangeUsername from "./components/ChangeUsername";
+import FriendList from "./components/FriendList";
+import Login from "./components/Login";
+import BarList from "./components/BarList";
 import BeerList from "./components/BeerList";
 
 class App extends Component {
@@ -24,6 +24,7 @@ class App extends Component {
     barListState: false,
     beerListState: false,
     barId: 0
+
   };
 
   async getUserByEmail() {
@@ -33,13 +34,19 @@ class App extends Component {
           this.state.newAccountEmail
       )
       .then((res) => {
-        this.setState({ getUserStatus: res.status });
-        this.setState({ getUserEmail: res.data.email });
-        this.setState({ getUserId: res.data.id });
-        this.setState({ getUserName: res.data.name });
+        this.setState(
+          {
+            getUserStatus: res.status,
+            getUserEmail: res.data.email,
+            getUserId: res.data.id,
+            getUserName: res.data.name,
+          },
+          () => {
+            this.testIfNewAccount();
+          }
+        );
         console.log(res);
         console.log(this.state);
-        this.testIfNewAccount();
       });
   }
 
@@ -126,7 +133,9 @@ class App extends Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto"></Nav>
             <Form inline>
-              <Nav.Link href="#profile">{this.state.getUserName}</Nav.Link>
+              {this.state.loggedIn && (
+                <Nav.Link href="#profile">{this.state.getUserName}</Nav.Link>
+              )}
               <Login callBack={this.loginCallBack} />
             </Form>
           </Navbar.Collapse>
@@ -148,22 +157,23 @@ class App extends Component {
         <div className="friendList">
           {this.state.showFriendsState && (
             <FriendList
-              flist={this.state.getUserEmail}
+              userId={this.state.getUserId}
+              userName={this.state.getUserName}
+              userEmail={this.state.getUserEmail}
               callBack={this.hideButtonCallBack}
             />
           )}
         </div>
+
 
         {this.state.beerListState && (
         <div className="beerList">
         <BeerList
           hideBeerListCallBack={this.hideBeerList}
           barid={this.barId}
-
         />
         </div>
         )}
-
 
         {this.state.changeUsernameState && (
           <ChangeUsername

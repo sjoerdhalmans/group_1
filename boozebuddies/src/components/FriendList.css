@@ -1,65 +1,82 @@
-.hideButton {
-    position:absolute;
-    right:5px;
-    top:5px;
-    color: black;
-    background-color: orange;
-    border-color: orange;
-    font-weight: bold;
-    letter-spacing: 0.05em;
-}
-
-.hideButton:hover,
-.hideButton:active,
-.hideButton:focus,
-.hideButton:active {
-    background: orange;
-    color: #ffffff;
-    border-color: orange;
-}
-
-.addFriendButton {
-    color: grey;
-    background-color: rgb(204, 92, 0);
-    border-color: rgb(204, 92, 0);
-    font-weight: bold;
-    color: black;
-    letter-spacing: 0.05em;
-}
-
-.addFriendButton:hover,
-.addFriendButton:active,
-.addFriendButton:focus,
-.addFriendButton:active {
-    background: orange;
-    color: #ffffff;
-    border-color: orange;
-}
-
 .friendsHeader {
-    color: orange;
-    font-weight:bold;
-    letter-spacing: 0.05em;
+  color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
 }
 
-.friendListBG {
-    height: 50px;
-    background-color: black;
-    color: orange;
-}
-
-.friendListBG:hover,
-.friendListBG:active,
-.friendListBG:focus {
-    background:orange;
-    color: rgb(204, 92, 0);
+.friendListItem {
+  height: 50px;
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: rgb(204, 92, 0);
 }
 
 .friendList {
-    border-style: solid;
-    border-color: rgb(204, 92, 0);
-    font-weight: bold;
-    position: absolute;
-    width: 235px;
-    color:white;
+  border-style: solid;
+  border-color: rgb(204, 92, 0);
+  position: absolute;
+  width: 300px;
+  color: white;
+}
+
+.hideButton {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.hideButton:hover,
+.hideButton:focus,
+.hideButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.friendRequestsHeader {
+  color: orange;
+  font-weight: bold;
+}
+
+.sentRequestsHeader {
+  color: orange;
+  font-weight: bold;
+}
+
+.friendListRemoveButton {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  padding: 5px;
+}
+
+.friendListAcceptButton {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  padding: 5px;
+}
+
+.addFriendButton {
+  margin-left: 170px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: rgb(204, 92, 0);
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  color: white;
+  letter-spacing: 0.05em;
+}
+
+.addFriendButton:hover,
+.addFriendButton:focus,
+.addFriendButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
 }

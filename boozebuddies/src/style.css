@@ -20,6 +20,7 @@ body {
   position: absolute;
   width: 235px;
   color: white;
+  background-color: rgb(32, 32, 32);
 }
 
 .friendList:empty {
