@@ -99,7 +99,7 @@
 
 .barListEditButton {
   position: relative;
-  left: 871px;
+  right: -91.25%;
   bottom: 100px;
   color: black;
   background-color: orange;
@@ -116,7 +116,7 @@
 
 .barListAddBeerButton {
   position: relative;
-  left: 773px;
+  right: -81%;
   bottom: 50px;
   color: black;
   background-color: orange;

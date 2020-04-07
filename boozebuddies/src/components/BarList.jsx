@@ -41,15 +41,19 @@ class BarList extends Component {
 
         this.setState({ bars: res.data.bars });
 
-        res.data.bars.forEach((item) => {
-          this.state.barId.push(item.id);
-          this.state.barName.push(item.name);
-          this.state.barAddress.push(item.adress);
-          this.state.barTel.push(item.telephoneNumber);
-          this.state.barZip.push(item.zipcode);
+        if (res.data.bars != null) {
+          res.data.bars.forEach((item) => {
+            this.state.barId.push(item.id);
+            this.state.barName.push(item.name);
+            this.state.barAddress.push(item.adress);
+            this.state.barTel.push(item.telephoneNumber);
+            this.state.barZip.push(item.zipcode);
 
-          this.setState({ barListUpdated: true });
-        });
+            this.setState({ barListUpdated: true });
+          });
+        } else {
+          this.getBars();
+        }
       });
   }
 

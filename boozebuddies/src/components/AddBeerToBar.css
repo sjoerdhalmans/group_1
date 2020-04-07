@@ -4,14 +4,21 @@
   border-color: rgb(204, 92, 0);
 }
 
-.addBeerToBarModalBody {
+.addBeerToBarModalBody1 {
   color: orange;
   background-color: rgb(32, 32, 32);
 }
 
+.addBeerToBarModalBody2 {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+  max-height: 700px;
+  overflow-y: auto;
+}
+
 .addBeerToBarList {
-  height: 700px;
-  overflow-y: scroll;
+  max-height: 700px;
+  overflow-y: auto;
 }
 
 .addBeerToBarListItem {
@@ -20,22 +27,23 @@
   border-color: rgb(204, 92, 0);
 }
 
-.addBeerToBarButtonSpan1 {
-  position: absolute;
-  right: 122px;
-  top: 6px;
+.addBeerToBarListItem:hover {
+  background-color: rgb(197, 147, 38);
+  color: black;
 }
 
-.addBeerToBarButtonSpan2 {
-  position: absolute;
-  right: 15px;
-  top: 7px;
+.addBeerToBarListItem:focus,
+.addBeerToBarListItem:active {
+  background-color: orange;
+  color: black;
+  border-color: rgb(204, 92, 0);
 }
 
 .addBeerToBarPriceInput {
   position: absolute;
-  width: 70px;
-  height: 36px;
+  top: 10px;
+  left: 17px;
+  width: 150px;
   background-color: rgb(32, 32, 32);
   border-color: orange;
   color: orange;
@@ -50,9 +58,9 @@
 }
 
 .addBeerToBarButton {
-  padding: 16%;
-  font-size: 15px;
-  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 175px;
   background: rgb(0, 167, 22);
   color: white;
   border-color: rgb(0, 167, 22);
@@ -61,9 +69,6 @@
 .addBeerToBarButton:hover,
 .addBeerToBarButton:focus,
 .addBeerToBarButton:active {
-  padding: 16%;
-  font-size: 15px;
-  font-weight: bold;
   background: rgb(0, 201, 27);
   color: white;
   border-color: rgb(0, 201, 27);
