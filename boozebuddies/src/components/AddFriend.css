@@ -1,6 +1,51 @@
-.modal-overlay {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    background-color: grey;
+.addFriendModalHeader {
+  color: rgb(204, 92, 0);
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addFriendModalBody {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+}
+
+.addFriendModalFooter {
+  background-color: rgb(32, 32, 32);
+  border-color: rgb(204, 92, 0);
+}
+
+.addFriendOkButton {
+  right: 5px;
+  top: 5px;
+  color: white;
+  background-color: rgb(204, 92, 0);
+  border-color: rgb(204, 92, 0);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.addFriendOkButton:hover,
+.addFriendOkButton:focus,
+.addFriendOkButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.addFriendTextArea {
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  color: orange;
+}
+
+.addFriendTextArea:hover,
+.addFriendTextArea:focus,
+.addFriendTextArea:active {
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: orange;
+}
+
+.addFriendInputError {
+  color: red;
 }

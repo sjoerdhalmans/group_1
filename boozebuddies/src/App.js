@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import Login from "./components/Login";
-import NewProfileForm from "./components/NewProfileForm";
-import ChangeUsername from "./components/ChangeUsername";
 import axios from "axios";
-import FriendList from "./components/FriendList";
-import BarList from "./components/BarList";
 import { Navbar, Nav, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
+import NewProfileForm from "./components/NewProfileForm";
+import ChangeUsername from "./components/ChangeUsername";
+import FriendList from "./components/FriendList";
+import Login from "./components/Login";
+import BarList from "./components/BarList";
 import BeerList from "./components/BeerList";
 
 class App extends Component {
@@ -130,7 +130,9 @@ class App extends Component {
         <div className="friendList">
           {this.state.showFriendsState && (
             <FriendList
-              flist={this.state.getUserEmail}
+              userId={this.state.getUserId}
+              userName={this.state.getUserName}
+              userEmail={this.state.getUserEmail}
               callBack={this.hideButtonCallBack}
             />
           )}
