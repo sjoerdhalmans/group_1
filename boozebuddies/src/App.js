@@ -7,6 +7,7 @@ import FriendList from "./components/FriendList";
 import { Navbar, Nav, Form, } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './style.css';
+import BeerList from "./components/BeerList";
 
 class App extends Component {
   state = {
@@ -18,7 +19,9 @@ class App extends Component {
     getUserStatus: 0,
     isNewAccount: false,
     showFriendsState: false,
-    changeUsernameState: false
+    changeUsernameState: false,
+
+    barId: 0
   };
 
   async getUserByEmail() {
@@ -111,6 +114,15 @@ class App extends Component {
           />
         )}
         </div>
+
+        {this.state.loggedIn && (
+        <div className="beerList">
+        <BeerList
+          barid={this.barId}
+        />
+        </div>
+        )}
+
 
         {this.state.changeUsernameState && (
           <ChangeUsername
