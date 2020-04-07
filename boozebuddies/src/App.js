@@ -22,6 +22,7 @@ class App extends Component {
     showFriendsState: false,
     changeUsernameState: false,
     barListState: false,
+    beerListState: false,
     barId: 0
   };
 
@@ -81,6 +82,20 @@ class App extends Component {
     this.setState({ barListState: true });
   };
 
+  showBeerList = () => {
+    if(this.state.beerListState == false)
+    {
+      this.setState({ beerListState: true });
+    }else
+    {
+      this.setState({ beerListState: false });
+    }
+  };
+
+  hideBeerList = () => {
+    this.setState({ beerListState: false });
+  };
+
   render() {
     return (
       <div className="flexContainer">
@@ -92,6 +107,9 @@ class App extends Component {
             <div>
               <Nav.Link href="#bars" onClick={() => this.showBarList()}>
                 Bars
+              </Nav.Link>
+              <Nav.Link href="#beers" onClick={() => this.showBeerList()}>
+                Beers
               </Nav.Link>
               <Nav.Link href="#friends" onClick={() => this.showFriends()}>
                 Friends
@@ -136,10 +154,12 @@ class App extends Component {
           )}
         </div>
 
-        {this.state.loggedIn && (
+        {this.state.beerListState && (
         <div className="beerList">
         <BeerList
+          hideBeerListCallBack={this.hideBeerList}
           barid={this.barId}
+
         />
         </div>
         )}
