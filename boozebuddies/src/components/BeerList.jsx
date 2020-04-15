@@ -23,10 +23,11 @@ class Beer {
 class BeerList extends Component {
 
 
-  constructor(props) {
+  constructor(props)
+  {
     super(props);
 
-    //Button function binds
+//Button function binds
 
     //list order buttons
     this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
@@ -38,42 +39,43 @@ class BeerList extends Component {
     this.addBeerClicked = this.addBeerClicked.bind(this);
 
 
-    let beer333 = new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
+    let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
 
     this.state = {
 
-      getBeersCalled: false,
-      filterArrayCalled: false,
-      beerListUpdated: false,
+        getBeersCalled: false,
+        filterArrayCalled: false,
+        beerListUpdated: false,
 
-      beerArray: [beer333],
-      beerArrayFiltered: [beer333],
+        beerArray:[beer333],
+        beerArrayFiltered:[beer333],
 
-      listOrder: "brand",
-      reverseListOrder: false,
-      listFilter: "",
+        listOrder: "brand",
+        reverseListOrder: false,
+        listFilter:"",
 
-      barId: props.barId,
+        barId: props.barId,
 
-      addBeerState: false,
-      addBeerBrand: "",
-      addBeerName: "",
-      addBeerAlcoholPercentage: 0
+        addBeerState: false,
+        addBeerBrand:"",
+        addBeerName:"",
+        addBeerAlcoholPercentage:0
 
-    };
+      };
   }
 
-  //callBacks
-  /*
-    hideBeerListCallBack = () => {
-      this.props.hideBeerListCallBack();
-    };
-  */
+//callBacks
+/*
+  hideBeerListCallBack = () => {
+    this.props.hideBeerListCallBack();
+  };
+*/
 
 
 
-  //Fuctions
-  componentDidMount() {
+//Fuctions
+  componentDidMount()
+  {
     //console.log("componentDidMount");
     //if(!this.state.getBeersCalled)
     this.getBeers();
@@ -86,27 +88,31 @@ class BeerList extends Component {
   {
     //console.log("componentDidUpdate");
 
-    if (prevState.listOrder != this.state.listOrder) {
+    if(prevState.listOrder != this.state.listOrder)
+    {
       //console.log("if listOrder");
       this.sortListBy(this.state.listOrder);
     }
 
-    if (this.state.reverseListOrder == true) {
+    if(this.state.reverseListOrder == true)
+    {
       //console.log("if sortReverse");
       this.sortListReverseOrder();
     }
 
-    if (this.state.addBeerState == true) {
+    if(this.state.addBeerState == true)
+    {
       //let newBeer = new Beer(456, "testName", "testBrand", 45);
       //this.addNewBeer(newBeer.name, newBeer.brand, newBeer.alcoholPercentage);
       this.addNewBeer(this.state.addBeerName, this.state.addBeerBrand, this.state.addBeerAlcoholPercentage);
     }
 
-    if (prevState.listFilter != this.state.listFilter ||
+    if(prevState.listFilter != this.state.listFilter ||
       prevState.listOrder != this.state.listOrder ||
-      prevState.beerArray != this.state.beerArray ||
+      prevState.beerArray != this.state.beerArray||
       this.state.reverseListOrder == true
-    ) {
+      )
+    {
       this.filterListBy(this.state.listFilter);
     }
 
@@ -115,9 +121,10 @@ class BeerList extends Component {
 
 
 
-  async getBeers() {
+  async getBeers()
+  {
     //let newBeersArray = this.state.beerArray;
-    let newBeersArray = [];  //creating new array for beer, so setState can be used instead of push
+      let newBeersArray =[];  //creating new array for beer, so setState can be used instead of push
 
     await axios
       .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
@@ -131,165 +138,175 @@ class BeerList extends Component {
         });
 
         //this.state.beerArrayFiltered = this.filterListBy(this.state.listFilter); //beerArray can be filtered
-        if (this.state.listFilter == null || this.state.listFilter.length == 0) {
+        if( this.state.listFilter == null || this.state.listFilter.length == 0)
+        {
           this.setState({ beerArrayFiltered: newBeersArray });
         }
 
         this.setState({ beerArray: newBeersArray });
       })
-  }
+    }
+
+
+
+    
+    async addNewBeer()
+    {
+      this.setState({addBeerState:false})
+
+      if(
+        this.state.addBeerName != null && this.state.addBeerName.length > 0 &&
+        this.state.addBeerBrand != null && this.state.addBeerBrand.length > 0 &&
+        this.state.addBeerAlcoholPercentage != null && !isNaN(this.state.addBeerAlcoholPercentage)
+      ){
+                    //console.log("if parameters ok");
+
+                    let addBeerBody =
+                      {
+                      alcoholPercentage: this.state.addBeerAlcoholPercentage,
+                      bars: [],
+                      brand: this.state.addBeerBrand,
+                      id: 0,
+                      name: this.state.addBeerName
+                    };
+
+
+
+                    await axios.post("http://217.101.44.31:8083/api/public/beer/addBeer", addBeerBody )
+                    .then(res => {
+                      console.log(res);
+
+                      this.getBeers();
+                      this.resetAddBeerValues();
+
+
+                    })}
+
+    }
+
+
+    resetAddBeerValues()
+    {
+      this.setState({
+        addBeerName: "",
+        addBeerBrand:"",
+        addBeerAlcoholPercentage:0
+      })
+
+      document.getElementById("idInputAddName").value = "";
+      document.getElementById("idInputAddBrand").value = "";
+      document.getElementById("idInputAddAlcoholPercentage").value = "";
+
+
+    }
+
+
+
+   sortListBy(type) //possible parameters: name/brand/id (string), later ABV
+    {
+        let newOrderBeerArray = this.state.beerArray;
+
+          if(type == "id" || type == "alcoholPercentage"){
+            newOrderBeerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1); //sorts numeric values
+          }
+          else {
+            newOrderBeerArray.sort((a, b) => a[type].localeCompare(b[type], undefined, {sensitivity: 'base'})) //ignores case
+          }
+
+          this.setState({beerArray: newOrderBeerArray})
+    }
+
+
+
+    sortListReverseOrder()
+    {
+      //console.log("sortListReverseOrder");
+
+      let reverseOrderBeerArray = this.state.beerArray;
+
+      reverseOrderBeerArray.reverse();
+
+
+      this.setState({beerArray: reverseOrderBeerArray, reverseListOrder:false})
+    }
 
 
 
 
-  async addNewBeer() {
-    this.setState({ addBeerState: false })
-
-    if (
-      this.state.addBeerName != null && this.state.addBeerName.length > 0 &&
-      this.state.addBeerBrand != null && this.state.addBeerBrand.length > 0 &&
-      this.state.addBeerAlcoholPercentage != null && !isNaN(this.state.addBeerAlcoholPercentage)
-    ) {
-      //console.log("if parameters ok");
-
-      let addBeerBody =
+    filterListBy(text) //returns beerArray with only beers which name contains given parameter(string)
+    {
+      if(text !=null && text.length > 0)
       {
-        alcoholPercentage: this.state.addBeerAlcoholPercentage,
-        bars: [],
-        brand: this.state.addBeerBrand,
-        id: 0,
-        name: this.state.addBeerName
-      };
-
-
-
-      await axios.post("http://217.101.44.31:8083/api/public/beer/addBeer", addBeerBody)
-        .then(res => {
-          console.log(res);
-
-          this.getBeers();
-          this.resetAddBeerValues();
-
-
-        })
+        let newFilteredArray = this.state.beerArray.filter(beer => beer.brand.toLowerCase().includes(text.toLowerCase()))
+        this.setState({beerArrayFiltered: newFilteredArray})
+      }
+      else
+      {
+        this.setState({beerArrayFiltered: this.state.beerArray})
+      }
     }
 
-  }
-
-
-  resetAddBeerValues() {
-    this.setState({
-      addBeerName: "",
-      addBeerBrand: "",
-      addBeerAlcoholPercentage: 0
-    })
-
-    document.getElementById("idInputAddName").value = "";
-    document.getElementById("idInputAddBrand").value = "";
-    document.getElementById("idInputAddAlcoholPercentage").value = "";
-
-
-  }
+//ButtonClick functions
+    hideButtonClicked = () => {
+          this.props.hideBeerListCallBack();
+    };
 
 
 
-  sortListBy(type) //possible parameters: name/brand/id (string), later ABV
-  {
-    let newOrderBeerArray = this.state.beerArray;
-
-    if (type == "id" || type == "alcoholPercentage") {
-      newOrderBeerArray.sort((a, b) => (a[type] > b[type]) ? 1 : -1); //sorts numeric values
-    }
-    else {
-      newOrderBeerArray.sort((a, b) => a[type].localeCompare(b[type], undefined, { sensitivity: 'base' })) //ignores case
+    sortByNameClicked(event)
+    {
+      event.preventDefault()
+      this.setState({listOrder: "name"})
     }
 
-    this.setState({ beerArray: newOrderBeerArray })
-  }
 
-
-
-  sortListReverseOrder() {
-    //console.log("sortListReverseOrder");
-
-    let reverseOrderBeerArray = this.state.beerArray;
-
-    reverseOrderBeerArray.reverse();
-
-
-    this.setState({ beerArray: reverseOrderBeerArray, reverseListOrder: false })
-  }
-
-
-
-
-  filterListBy(text) //returns beerArray with only beers which name contains given parameter(string)
-  {
-    if (text != null && text.length > 0) {
-      let newFilteredArray = this.state.beerArray.filter(beer => beer.brand.toLowerCase().includes(text.toLowerCase()))
-      this.setState({ beerArrayFiltered: newFilteredArray })
+    sortByBrandClicked(event)
+    {
+      event.preventDefault()
+      this.setState({listOrder: "brand"})
     }
-    else {
-      this.setState({ beerArrayFiltered: this.state.beerArray })
+
+
+    sortByAlcoholPClicked(event)
+    {
+      event.preventDefault()
+      this.setState({listOrder: "alcoholPercentage"})
     }
-  }
 
-  //ButtonClick functions
-  hideButtonClicked = () => {
-    this.props.hideBeerListCallBack();
-  };
-
-
-
-  sortByNameClicked(event) {
-    event.preventDefault()
-    this.setState({ listOrder: "name" })
-  }
+    sortReverseClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({reverseListOrder: true})
+    }
 
 
-  sortByBrandClicked(event) {
-    event.preventDefault()
-    this.setState({ listOrder: "brand" })
-  }
-
-
-  sortByAlcoholPClicked(event) {
-    event.preventDefault()
-    this.setState({ listOrder: "alcoholPercentage" })
-  }
-
-  sortReverseClicked(event) {
-    //console.log("sortReverseClicked");
-    event.preventDefault()
-    this.setState({ reverseListOrder: true })
-  }
-
-
-  addBeerClicked(event) {
-    //console.log("sortReverseClicked");
-    event.preventDefault()
-    this.setState({ addBeerState: true })
-  }
+    addBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({addBeerState: true})
+    }
 
 
 
-  //filter change handler
-  filterListChangeHandler = event => {
-    this.setState({ listFilter: event.target.value });
-  };
+//filter change handler
+    filterListChangeHandler  = event => {
+      this.setState({ listFilter: event.target.value });
+    };
 
-  //Add Beer Change handlers
-  addBeerBrandChangeHandler = event => {
-    this.setState({ addBeerBrand: event.target.value });
-  };
+//Add Beer Change handlers
+    addBeerBrandChangeHandler = event => {
+      this.setState({ addBeerBrand: event.target.value });
+    };
 
-  addBeerNameChangeHandler = event => {
-    this.setState({ addBeerName: event.target.value });
-  };
+    addBeerNameChangeHandler = event => {
+      this.setState({ addBeerName: event.target.value });
+    };
 
-  addBeerAlcoholPercentageChangeHandler = event => {
-    this.setState({ addBeerAlcoholPercentage: event.target.value });
-  };
+    addBeerAlcoholPercentageChangeHandler = event => {
+      this.setState({ addBeerAlcoholPercentage: event.target.value });
+    };
 
 
 
@@ -298,18 +315,18 @@ class BeerList extends Component {
 
 
 
-  //Render
-  render() {
+//Render
+  render(){
 
-    return (
+    return(
 
       <React.Fragment>
 
-        <Button
-          type="submit"
-          onClick={this.hideButtonClicked}
-        >
-          Hide
+      <Button
+        type="submit"
+        onClick={this.hideButtonClicked}
+      >
+        Hide
       </Button>
 
         <h4>Beerlist</h4>
@@ -351,9 +368,9 @@ class BeerList extends Component {
 
 
         {this.state.beerArrayFiltered.map(beer => (
-          <ul key={beer.id}>
-            {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
-          </ul>
+        <ul key={beer.id}>
+          {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
+        </ul>
         ))}
 
         <h4>Add New Beer</h4>
@@ -371,10 +388,10 @@ class BeerList extends Component {
         </form>
 
         <Button
-          type="submit"
-          onClick={this.addBeerClicked}
+        type="submit"
+        onClick={this.addBeerClicked}
         >
-          Add New Beer
+        Add New Beer
         </Button>
 
       </React.Fragment>
