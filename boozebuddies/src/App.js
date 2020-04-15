@@ -9,6 +9,7 @@ import FriendList from "./components/FriendList";
 import Login from "./components/Login";
 import BarList from "./components/BarList";
 import BeerList from "./components/BeerList";
+import Timeline from "./components/Timeline";
 
 class App extends Component {
   state = {
@@ -23,8 +24,8 @@ class App extends Component {
     changeUsernameState: false,
     barListState: false,
     beerListState: false,
-    barId: 0
-
+    timelineState: false,
+    barId: 0,
   };
 
   async getUserByEmail() {
@@ -59,6 +60,7 @@ class App extends Component {
   loginCallBack = (childData) => {
     this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
     this.setState({ loggedIn: true });
+    this.setState({ timelineState: true });
   };
 
   newProfileFormCallBack = () => {
@@ -77,8 +79,16 @@ class App extends Component {
     this.setState({ barListState: false });
   };
 
+  timelineCallBack = () => {
+    this.setState({ timelineState: false });
+  };
+
   showFriends = () => {
-    this.setState({ showFriendsState: true });
+    if (this.state.showFriendsState == false) {
+      this.setState({ showFriendsState: true });
+    } else {
+      this.setState({ showFriendsState: false });
+    }
   };
 
   changeUsername = () => {
@@ -86,15 +96,37 @@ class App extends Component {
   };
 
   showBarList = () => {
-    this.setState({ barListState: true });
+    if (this.state.barListState == false) {
+      this.setState({
+        barListState: true,
+        timelineState: false,
+        beerListState: false,
+      });
+    } else {
+      this.setState({ barListState: false });
+    }
+  };
+
+  showTimeline = () => {
+    if (this.state.timelineState == false) {
+      this.setState({
+        timelineState: true,
+        barListState: false,
+        beerListState: false,
+      });
+    } else {
+      this.setState({ timelineState: false });
+    }
   };
 
   showBeerList = () => {
-    if(this.state.beerListState == false)
-    {
-      this.setState({ beerListState: true });
-    }else
-    {
+    if (this.state.beerListState == false) {
+      this.setState({
+        beerListState: true,
+        timelineState: false,
+        barListState: false,
+      });
+    } else {
       this.setState({ beerListState: false });
     }
   };
@@ -112,6 +144,9 @@ class App extends Component {
           </h2>
           {this.state.loggedIn && (
             <div>
+              <Nav.Link href="#timeline" onClick={() => this.showTimeline()}>
+                Timeline
+              </Nav.Link>
               <Nav.Link href="#bars" onClick={() => this.showBarList()}>
                 Bars
               </Nav.Link>
@@ -148,11 +183,11 @@ class App extends Component {
           />
         )}
 
-        <div className="barList">
-          {this.state.barListState && (
+        {this.state.barListState && (
+          <div className="barList">
             <BarList callBack={this.barListCallBack} />
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="friendList">
           {this.state.showFriendsState && (
@@ -165,20 +200,26 @@ class App extends Component {
           )}
         </div>
 
-
         {this.state.beerListState && (
-        <div className="beerList">
-        <BeerList
-          hideBeerListCallBack={this.hideBeerList}
-          barid={this.barId}
-        />
-        </div>
+          <div className="beerList">
+            <BeerList
+              hideBeerListCallBack={this.hideBeerList}
+              barid={this.barId}
+            />
+          </div>
         )}
 
         {this.state.changeUsernameState && (
           <ChangeUsername
             userId={this.state.getUserId}
             callBack={this.changeUsernameCallBack}
+          />
+        )}
+
+        {this.state.timelineState && (
+          <Timeline
+            userId={this.state.getUserId}
+            callBack={this.timelineCallBack}
           />
         )}
 

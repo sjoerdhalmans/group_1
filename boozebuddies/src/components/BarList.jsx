@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
-import "./BarList.css";
+import "./styles/BarList.css";
 import axios from "axios";
 import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
@@ -17,16 +17,7 @@ class BarList extends Component {
     toggleState: false,
     lastToggleBarId: 0,
     bars: [],
-    barId: [],
-    barName: [],
-    barAddress: [],
-    barTel: [],
-    barZip: [],
-    beerId: [],
-    beerName: [],
-    beerPrice: [],
-    beerBrand: [],
-    beerAlcPct: [],
+    beers: [],
   };
 
   componentDidMount() {
@@ -39,18 +30,11 @@ class BarList extends Component {
       .then((res) => {
         console.log(res);
 
-        this.setState({ bars: res.data.bars });
-
         if (res.data.bars != null) {
           res.data.bars.forEach((item) => {
-            this.state.barId.push(item.id);
-            this.state.barName.push(item.name);
-            this.state.barAddress.push(item.adress);
-            this.state.barTel.push(item.telephoneNumber);
-            this.state.barZip.push(item.zipcode);
-
-            this.setState({ barListUpdated: true });
+            this.state.bars.push(item);
           });
+          this.setState({ barListUpdated: true });
         } else {
           this.getBars();
         }
@@ -62,14 +46,9 @@ class BarList extends Component {
       .get("http://217.101.44.31:8084/api/public/bar/getById/" + barIdParam)
       .then((res) => {
         res.data.beers.forEach((item) => {
-          this.state.beerId.push(item.beer.id);
-          this.state.beerName.push(item.beer.name);
-          this.state.beerBrand.push(item.beer.brand);
-          this.state.beerAlcPct.push(item.beer.alcoholPercentage);
-          this.state.beerPrice.push(item.price);
-
-          this.setState({ beerListUpdated: true });
+          this.state.beers.push(item);
         });
+        this.setState({ beerListUpdated: true });
       });
   }
 
@@ -78,18 +57,9 @@ class BarList extends Component {
       this.state.toggleState === true &&
       this.state.lastToggleBarId !== barIdParam
     ) {
-      this.setState(
-        {
-          beerId: [],
-          beerName: [],
-          beerPrice: [],
-          beerBrand: [],
-          beerAlcPct: [],
-        },
-        () => {
-          this.getBarBeers(barIdParam);
-        }
-      );
+      this.setState({ beers: [] }, () => {
+        this.getBarBeers(barIdParam);
+      });
     } else {
       if (this.state.toggleState === false) {
         this.setState({ toggleState: true });
@@ -97,11 +67,7 @@ class BarList extends Component {
       } else {
         this.setState({
           toggleState: false,
-          beerId: [],
-          beerName: [],
-          beerPrice: [],
-          beerBrand: [],
-          beerAlcPct: [],
+          beers: [],
           beerListUpdated: false,
         });
       }
@@ -117,11 +83,7 @@ class BarList extends Component {
   editBarCallBack = () => {
     this.setState({
       editBarState: false,
-      barId: [],
-      barName: [],
-      barAddress: [],
-      barTel: [],
-      barZip: [],
+      bars: [],
     });
     this.getBars();
   };
@@ -129,11 +91,7 @@ class BarList extends Component {
   addBeerCallBack = () => {
     this.setState({
       addBeerState: false,
-      beerId: [],
-      beerName: [],
-      beerPrice: [],
-      beerBrand: [],
-      beerAlcPct: [],
+      beers: [],
     });
     this.getBarBeers(this.state.lastToggleBarId);
   };
@@ -141,11 +99,7 @@ class BarList extends Component {
   addBarCallBack = () => {
     this.setState({
       addBarState: false,
-      barId: [],
-      barName: [],
-      barAddress: [],
-      barTel: [],
-      barZip: [],
+      bars: [],
     });
     this.getBars();
   };
@@ -179,55 +133,53 @@ class BarList extends Component {
         </Button>
         <Accordion>
           {this.state.barListUpdated &&
-            this.state.barId.map((item, i) => (
+            this.state.bars.map((item, i) => (
               <Card key={i}>
                 <Card.Header
                   className="barListHeader"
-                  onClick={() => this.toggleButtonHandler(item)}
+                  onClick={() => this.toggleButtonHandler(item.id)}
                 >
                   <Accordion.Toggle
                     as={Card.Header}
                     eventKey={i}
                     className="barListToggle"
                   >
-                    {this.state.barName[i]}
+                    {item.name}
                   </Accordion.Toggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">
                     <div className="barListBodyText">
-                      Address: {this.state.barAddress[i]}
+                      Address: {item.adress}
                     </div>
                     <div className="barListBodyText">
-                      Tel: {this.state.barTel[i]}
+                      Tel: {item.telephoneNumber}
                     </div>
-                    <div className="barListBodyText">
-                      Zip: {this.state.barZip[i]}
-                    </div>
+                    <div className="barListBodyText">Zip: {item.zipcode}</div>
                     <Button
                       className="barListEditButton"
-                      onClick={() => this.showEditBar(item)}
+                      onClick={() => this.showEditBar(item.id)}
                     >
                       Edit bar
                     </Button>
                     <Button
                       className="barListAddBeerButton"
-                      onClick={() => this.showAddBeer(item)}
+                      onClick={() => this.showAddBeer(item.id)}
                     >
                       Add beers
                     </Button>
                     <div className="barListBeersHeader">Beers:</div>
                     <ListGroup className="barListBeersList">
                       {this.state.beerListUpdated &&
-                        this.state.beerId.map((item, i) => (
+                        this.state.beers.map((item, i) => (
                           <ListGroup.Item
                             key={i}
                             className="barListBeersListItem"
                           >
-                            {this.state.beerBrand[i]} {this.state.beerName[i]},{" "}
-                            {this.state.beerAlcPct[i]} %
+                            {item.beer.brand} {item.beer.name},{" "}
+                            {item.beer.alcoholPercentage} %
                             <span className="barListBeerPrice">
-                              {this.state.beerPrice[i]} €
+                              {item.price} €
                             </span>
                           </ListGroup.Item>
                         ))}

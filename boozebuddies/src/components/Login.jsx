@@ -3,7 +3,7 @@ import { useAuth0 } from "../react-auth0-spa";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./Login.css";
+import "./styles/Login.css";
 
 function Login(props) {
   const {

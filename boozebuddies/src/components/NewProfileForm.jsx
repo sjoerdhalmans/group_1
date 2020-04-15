@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
-import "./NewProfileForm.css";
+import "./styles/NewProfileForm.css";
 
 class NewProfileForm extends Component {
   state = {
