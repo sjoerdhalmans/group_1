@@ -84,7 +84,7 @@ class App extends Component {
   };
 
   showFriends = () => {
-    if (this.state.showFriendsState == false) {
+    if (this.state.showFriendsState === false) {
       this.setState({ showFriendsState: true });
     } else {
       this.setState({ showFriendsState: false });
@@ -96,7 +96,7 @@ class App extends Component {
   };
 
   showBarList = () => {
-    if (this.state.barListState == false) {
+    if (this.state.barListState === false) {
       this.setState({
         barListState: true,
         timelineState: false,
@@ -108,7 +108,7 @@ class App extends Component {
   };
 
   showTimeline = () => {
-    if (this.state.timelineState == false) {
+    if (this.state.timelineState === false) {
       this.setState({
         timelineState: true,
         barListState: false,
@@ -120,7 +120,7 @@ class App extends Component {
   };
 
   showBeerList = () => {
-    if (this.state.beerListState == false) {
+    if (this.state.beerListState === false) {
       this.setState({
         beerListState: true,
         timelineState: false,
@@ -185,7 +185,10 @@ class App extends Component {
 
         {this.state.barListState && (
           <div className="barList">
-            <BarList callBack={this.barListCallBack} />
+            <BarList
+              callBack={this.barListCallBack}
+              userId={this.state.getUserId}
+            />
           </div>
         )}
 

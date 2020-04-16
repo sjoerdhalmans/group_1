@@ -5,6 +5,7 @@ import axios from "axios";
 import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
+import StarRatingComponent from "react-star-rating-component";
 
 class BarList extends Component {
   state = {
@@ -18,6 +19,9 @@ class BarList extends Component {
     lastToggleBarId: 0,
     bars: [],
     beers: [],
+    barRatings: [],
+    barRated: false,
+    lastBarRatingId: 0,
   };
 
   componentDidMount() {
@@ -50,6 +54,67 @@ class BarList extends Component {
         });
         this.setState({ beerListUpdated: true });
       });
+  }
+
+  async rateBar(barIdParam, ratingParam) {
+    const rateBarBody = {
+      objectId: barIdParam,
+      objectRating: ratingParam,
+      userId: this.props.userId,
+    };
+
+    await axios
+      .post("http://217.101.44.31:8086/api/public/bar/rateBar", rateBarBody)
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
+  async editBarRating(barIdParam, ratingParam, ratingIdParam) {
+    const editBarRatingBody = {
+      barId: barIdParam,
+      id: ratingIdParam,
+      rating: ratingParam,
+      userId: this.props.userId,
+    };
+
+    await axios
+      .put(
+        "http://217.101.44.31:8086/api/public/bar/EditBarRating",
+        editBarRatingBody
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
+  async testIfBarRated(barIdParam, ratingParam) {
+    let barRatingId;
+    await axios
+      .get(
+        "http://217.101.44.31:8086/api/public/bar/getAllUserRatings/" +
+          this.props.userId
+      )
+      .then((res) => {
+        console.log(res);
+        res.data.barRatings.forEach((item) => {
+          if (item.barId === barIdParam) {
+            this.setState({ barRated: true });
+            barRatingId = item.id;
+          }
+        });
+
+        if (!this.state.barRated) {
+          this.rateBar(barIdParam, ratingParam);
+        } else {
+          this.editBarRating(barIdParam, ratingParam, barRatingId);
+        }
+      });
+  }
+
+  onStarClick(barIdParam, ratingParam) {
+    this.setState({ barRated: false });
+    this.testIfBarRated(barIdParam, ratingParam);
   }
 
   toggleButtonHandler = (barIdParam) => {
@@ -135,17 +200,21 @@ class BarList extends Component {
           {this.state.barListUpdated &&
             this.state.bars.map((item, i) => (
               <Card key={i}>
-                <Card.Header
-                  className="barListHeader"
-                  onClick={() => this.toggleButtonHandler(item.id)}
-                >
+                <Card.Header className="barListHeader">
                   <Accordion.Toggle
+                    onClick={() => this.toggleButtonHandler(item.id)}
                     as={Card.Header}
                     eventKey={i}
                     className="barListToggle"
                   >
                     {item.name}
                   </Accordion.Toggle>
+                  <StarRatingComponent
+                    name={item.id}
+                    className="barListRating"
+                    starCount={5}
+                    onStarClick={this.onStarClick.bind(this, item.id)}
+                  />
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">

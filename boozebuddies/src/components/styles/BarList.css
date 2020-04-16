@@ -60,6 +60,15 @@
 .barListToggle {
   color: orange;
   font-size: 22px;
+  width: 85%;
+  height: 65px;
+  display: inline-block;
+}
+
+.barListRating {
+  font-size: 25px;
+  left: 3%;
+  top: 12px;
 }
 
 .barListBody {

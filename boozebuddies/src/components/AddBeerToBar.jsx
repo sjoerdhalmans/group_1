@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button, ListGroup, Form, Tab } from "react-bootstrap";
+import { Button, ListGroup, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
 import "./styles/AddBeerToBar.css";
