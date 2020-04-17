@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import { Button, ListGroup } from "react-bootstrap";
+//import { Button, ListGroup } from "react-bootstrap";
+import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
 //import "./FriendList.css";
-import "./BarList.css";
+import "./BeerList.css";
 
 
 
@@ -28,6 +29,8 @@ class BeerList extends Component {
     super(props);
 
 //Button function binds
+    this.showAddBeerClicked = this.showAddBeerClicked.bind(this);
+
 
     //list order buttons
     this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
@@ -37,6 +40,7 @@ class BeerList extends Component {
 
     //add beer buttons
     this.addBeerClicked = this.addBeerClicked.bind(this);
+    this.cancelAddBeerClicked = this.cancelAddBeerClicked.bind(this);
 
 
     let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
@@ -56,6 +60,7 @@ class BeerList extends Component {
 
         barId: props.barId,
 
+        showAddBeer:false,
         addBeerState: false,
         addBeerBrand:"",
         addBeerName:"",
@@ -149,7 +154,7 @@ class BeerList extends Component {
 
 
 
-    
+
     async addNewBeer()
     {
       this.setState({addBeerState:false})
@@ -178,6 +183,7 @@ class BeerList extends Component {
 
                       this.getBeers();
                       this.resetAddBeerValues();
+                      this.setState({showAddBeer: false});
 
 
                     })}
@@ -288,6 +294,20 @@ class BeerList extends Component {
       this.setState({addBeerState: true})
     }
 
+    showAddBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({showAddBeer: true})
+    }
+
+    cancelAddBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({showAddBeer: false})
+    }
+
 
 
 //filter change handler
@@ -320,18 +340,28 @@ class BeerList extends Component {
 
     return(
 
-      <React.Fragment>
+      <div>
 
-      <Button
-        type="submit"
-        onClick={this.hideButtonClicked}
-      >
-        Hide
-      </Button>
 
-        <h4>Beerlist</h4>
 
-        <Button
+        <h4 className="beersHeader">Beerlist</h4>
+
+
+
+
+        <Button className="beersHideButton"
+          type="submit"
+          onClick={this.hideButtonClicked}
+        >
+          Hide
+        </Button>
+
+
+
+{!this.state.showAddBeer &&
+        <div>
+
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByBrandClicked}
         >
@@ -339,7 +369,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByNameClicked}
         >
@@ -347,7 +377,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByAlcoholPClicked}
         >
@@ -355,7 +385,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortReverseClicked}
         >
@@ -367,34 +397,68 @@ class BeerList extends Component {
 
 
 
-        {this.state.beerArrayFiltered.map(beer => (
-        <ul key={beer.id}>
-          {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
-        </ul>
-        ))}
-
-        <h4>Add New Beer</h4>
-
-        <form>
-          <p>Brand: {this.state.addBeerBrand}</p>
-          <input id="idInputAddBrand" type="text" onChange={this.addBeerBrandChangeHandler} />
-
-          <p>Name: {this.state.addBeerName}</p>
-          <input id="idInputAddName" type="text" onChange={this.addBeerNameChangeHandler} />
-
-          <p>ABV %: {this.state.addBeerAlcoholPercentage}</p>
-          <input id="idInputAddAlcoholPercentage" type="text" onChange={this.addBeerAlcoholPercentageChangeHandler} />
-
-        </form>
-
-        <Button
-        type="submit"
-        onClick={this.addBeerClicked}
+        <Button className="beersAddBeerButton"
+          type="submit"
+          onClick={this.showAddBeerClicked}
         >
-        Add New Beer
+          Add new Beer
         </Button>
 
-      </React.Fragment>
+        <Accordion>
+
+            {this.state.beerArrayFiltered.map(beer => (
+            <Card key={beer.id}>
+              <Card.Header className="beerCardHeader">
+
+                {beer.id}: {beer.brand} {beer.name}, {beer.alcoholPercentage}%
+
+                <Button className="beerCardAddRatingButton"> add rating </Button>
+              </Card.Header>
+
+
+            </Card>
+            ))}
+        </Accordion>
+
+
+        </div>
+}
+
+
+        {this.state.showAddBeer && ( <div>
+                    <h4>Add New Beer</h4>
+
+                    <form>
+                      <p>Brand: {this.state.addBeerBrand}</p>
+                      <input id="idInputAddBrand" type="text" onChange={this.addBeerBrandChangeHandler} />
+
+                      <p>Name: {this.state.addBeerName}</p>
+                      <input id="idInputAddName" type="text" onChange={this.addBeerNameChangeHandler} />
+
+                      <p>ABV %: {this.state.addBeerAlcoholPercentage}</p>
+                      <input id="idInputAddAlcoholPercentage" type="text" onChange={this.addBeerAlcoholPercentageChangeHandler} />
+
+                    </form>
+
+                    <Button className="beerListButton"
+                    type="submit"
+                    onClick={this.addBeerClicked}
+                    >
+                    Add
+                    </Button>
+
+                    <Button className="beerListButton"
+                    type="submit"
+                    onClick={this.cancelAddBeerClicked}
+                    >
+                    Cancel
+                    </Button>
+
+
+                    </div>
+        )}
+
+      </div>
     )
   }
 
