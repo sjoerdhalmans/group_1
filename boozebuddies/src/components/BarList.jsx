@@ -6,6 +6,7 @@ import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
 import StarRatingComponent from "react-star-rating-component";
+import ReactStars from "react-stars";
 
 class BarList extends Component {
   state = {
@@ -15,6 +16,7 @@ class BarList extends Component {
     selectedBarId: 0,
     barListUpdated: false,
     beerListUpdated: false,
+    ratingsUpdated: false,
     toggleState: false,
     lastToggleBarId: 0,
     bars: [],
@@ -33,14 +35,40 @@ class BarList extends Component {
       .get("http://217.101.44.31:8084/api/public/bar/getAllBars")
       .then((res) => {
         console.log(res);
-
         if (res.data.bars != null) {
           res.data.bars.forEach((item) => {
             this.state.bars.push(item);
           });
-          this.setState({ barListUpdated: true });
+          this.setState({ barListUpdated: true }, () =>
+            this.getBarRatingsLoop()
+          );
         } else {
           this.getBars();
+        }
+      });
+  }
+
+  getBarRatingsLoop() {
+    this.state.bars.forEach((item, i) => {
+      this.state.barRatings.push(i);
+      this.getBarRatings(item.id, i);
+    });
+  }
+
+  async getBarRatings(barIdParam, index) {
+    await axios
+      .get(
+        "http://217.101.44.31:8086/api/public/bar/getBarAverage/" + barIdParam
+      )
+      .then((res) => {
+        let a = this.state.barRatings;
+        a[index] = Math.round(res.data.average);
+        this.setState({ barRatings: a });
+
+        //this.state.barRatings[index] = Math.round(res.data.average);
+
+        if (index === this.state.bars.length - 1) {
+          this.setState({ ratingsUpdated: true });
         }
       });
   }
@@ -112,7 +140,8 @@ class BarList extends Component {
       });
   }
 
-  onStarClick(barIdParam, ratingParam) {
+  onStarClick(barIdParam, index, ratingParam) {
+    this.state.barRatings[index] = ratingParam;
     this.setState({ barRated: false });
     this.testIfBarRated(barIdParam, ratingParam);
   }
@@ -149,6 +178,7 @@ class BarList extends Component {
     this.setState({
       editBarState: false,
       bars: [],
+      barRatings: [],
     });
     this.getBars();
   };
@@ -165,6 +195,7 @@ class BarList extends Component {
     this.setState({
       addBarState: false,
       bars: [],
+      barRatings: [],
     });
     this.getBars();
   };
@@ -209,12 +240,15 @@ class BarList extends Component {
                   >
                     {item.name}
                   </Accordion.Toggle>
-                  <StarRatingComponent
-                    name={item.id}
-                    className="barListRating"
-                    starCount={5}
-                    onStarClick={this.onStarClick.bind(this, item.id)}
-                  />
+                  {this.state.ratingsUpdated && (
+                    <StarRatingComponent
+                      name={item.name}
+                      className="barListRating"
+                      starCount={5}
+                      value={this.state.barRatings[i]}
+                      onStarClick={this.onStarClick.bind(this, item.id, i)}
+                    />
+                  )}
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">

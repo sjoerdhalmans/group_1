@@ -55,6 +55,7 @@
 
 .barListHeader {
   background-color: rgb(32, 32, 32);
+  height: 95px;
 }
 
 .barListToggle {
@@ -68,7 +69,7 @@
 .barListRating {
   font-size: 25px;
   left: 3%;
-  top: 12px;
+  top: 15px;
 }
 
 .barListBody {
