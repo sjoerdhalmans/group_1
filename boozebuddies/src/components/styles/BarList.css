@@ -61,7 +61,7 @@
 .barListToggle {
   color: orange;
   font-size: 22px;
-  width: 85%;
+  width: 70%;
   height: 65px;
   display: inline-block;
 }
@@ -70,6 +70,40 @@
   font-size: 25px;
   left: 3%;
   top: 15px;
+}
+
+.barListCheckInButton {
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  width: 110px;
+  margin-left: 60px;
+  margin-bottom: 10px;
+}
+
+.barListCheckInButton:hover,
+.barListCheckInButton:focus,
+.barListCheckInButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.barListCheckedInButton {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
+  width: 110px;
+  margin-left: 60px;
+  margin-bottom: 10px;
+}
+
+.barListCheckedInButton:hover,
+.barListCheckedInButton:focus,
+.barListCheckedInButton:active {
+  color: orange;
+  background-color: rgb(32, 32, 32);
+  border-color: orange;
 }
 
 .barListBody {

@@ -6,7 +6,14 @@ import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
 import StarRatingComponent from "react-star-rating-component";
-import ReactStars from "react-stars";
+
+/*TODO:
++check-in buttons
+-make bar ratings undertandable
+-better timeline
+-fix api bugs
+-bar/beer search and sorting
+*/
 
 class BarList extends Component {
   state = {
@@ -24,6 +31,8 @@ class BarList extends Component {
     barRatings: [],
     barRated: false,
     lastBarRatingId: 0,
+    checkedIn: [],
+    checkInButtonClassName: [],
   };
 
   componentDidMount() {
@@ -50,7 +59,9 @@ class BarList extends Component {
 
   getBarRatingsLoop() {
     this.state.bars.forEach((item, i) => {
-      this.state.barRatings.push(i);
+      this.state.barRatings.push(0);
+      this.state.checkedIn.push("Check-in");
+      this.state.checkInButtonClassName.push("barListCheckInButton");
       this.getBarRatings(item.id, i);
     });
   }
@@ -64,8 +75,6 @@ class BarList extends Component {
         let a = this.state.barRatings;
         a[index] = Math.round(res.data.average);
         this.setState({ barRatings: a });
-
-        //this.state.barRatings[index] = Math.round(res.data.average);
 
         if (index === this.state.bars.length - 1) {
           this.setState({ ratingsUpdated: true });
@@ -146,6 +155,22 @@ class BarList extends Component {
     this.testIfBarRated(barIdParam, ratingParam);
   }
 
+  async checkIntoBar(barIdParam) {
+    const checkIntoBarBody = {
+      bar_id: barIdParam,
+      user_id: this.props.userId,
+    };
+
+    await axios
+      .post(
+        "http://217.101.44.31:8085/api/public/activity/postActivity",
+        checkIntoBarBody
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
   toggleButtonHandler = (barIdParam) => {
     if (
       this.state.toggleState === true &&
@@ -214,6 +239,18 @@ class BarList extends Component {
     this.setState({ addBarState: true });
   };
 
+  checkInButtonHandler = (barIdParam, index) => {
+    if (this.state.checkedIn[index] === "Check-in") {
+      this.checkIntoBar(barIdParam);
+    }
+
+    this.state.checkedIn.fill("Check-in");
+    this.state.checkInButtonClassName.fill("barListCheckInButton");
+    this.state.checkedIn[index] = "Checked-in";
+    this.state.checkInButtonClassName[index] = "barListCheckedInButton";
+    this.forceUpdate();
+  };
+
   render() {
     return (
       <div>
@@ -241,13 +278,22 @@ class BarList extends Component {
                     {item.name}
                   </Accordion.Toggle>
                   {this.state.ratingsUpdated && (
-                    <StarRatingComponent
-                      name={item.name}
-                      className="barListRating"
-                      starCount={5}
-                      value={this.state.barRatings[i]}
-                      onStarClick={this.onStarClick.bind(this, item.id, i)}
-                    />
+                    <>
+                      <StarRatingComponent
+                        name={item.name}
+                        className="barListRating"
+                        starCount={5}
+                        value={this.state.barRatings[i]}
+                        onStarClick={this.onStarClick.bind(this, item.id, i)}
+                      />
+                      <Button
+                        className={this.state.checkInButtonClassName[i]}
+                        onClick={() => this.checkInButtonHandler(item.id, i)}
+                        style={{ backgroundColor: this.state.bgColor }}
+                      >
+                        {this.state.checkedIn[i]}
+                      </Button>
+                    </>
                   )}
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
