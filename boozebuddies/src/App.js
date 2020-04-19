@@ -29,6 +29,16 @@ class App extends Component {
   };
 
   async getUserByEmail() {
+    //test that api is working
+    await axios
+      .get("http://217.101.44.31:8081/api/public/user/getUserByEmail/test")
+      .then((res) => {
+        if (res.data === "") {
+          console.log(res);
+          this.getUserByEmail();
+        }
+      });
+
     await axios
       .get(
         "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +

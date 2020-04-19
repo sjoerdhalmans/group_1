@@ -10,8 +10,9 @@ import StarRatingComponent from "react-star-rating-component";
 /*TODO:
 +check-in buttons
 +make bar ratings understandable
--better timeline
++better timeline
 -fix api bugs
+-new user-check if username taken
 -bar/beer search and sorting
 */
 

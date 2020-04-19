@@ -19,6 +19,24 @@
   margin-top: 20px;
 }
 
+.timelineToggleButton {
+  position: absolute;
+  right: 90px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+}
+
+.timelineToggleButton:hover,
+.timelineToggleButton:focus,
+.timelineToggleButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
 .timelineHideButton {
   position: absolute;
   right: 10px;
