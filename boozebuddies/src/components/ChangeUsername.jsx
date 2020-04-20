@@ -10,7 +10,58 @@ class ChangeUsername extends Component {
     showModal: true,
     newUsernameInput: "",
     inputError: false,
+    inputErrorText: "",
   };
+
+  async updateUsername() {
+    const updateUserBody = {
+      id: this.props.userId,
+      newUsername: this.state.newUsernameInput,
+    };
+
+    await axios
+      .put(
+        "http://217.101.44.31:8081/api/public/user/UpdateUsername",
+        updateUserBody
+      )
+      .then((res) => {
+        console.log(res.data);
+        this.handleModalClose();
+      });
+  }
+
+  async testIfUsernameTaken() {
+    let usernameTaken = false;
+    await axios
+      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .then((res) => {
+        console.log("getAllUsers:");
+        console.log(res);
+        console.log(res.data);
+        if (res.data.name !== null) {
+          res.data.forEach((item) => {
+            if (item.name === this.state.newUsernameInput) {
+              usernameTaken = true;
+            }
+          });
+
+          if (usernameTaken === false) {
+            if (
+              this.state.newUsernameInput.length > 0 &&
+              this.state.newUsernameInput != null
+            ) {
+              this.updateUsername();
+            } else {
+              this.setState({ inputErrorText: "Username can't be empty" });
+            }
+          } else {
+            this.setState({ inputErrorText: "Username already taken" });
+          }
+        } else {
+          this.testIfUsernameTaken();
+        }
+      });
+  }
 
   handleModalClose = () => {
     this.setState({ showModal: false });
@@ -19,30 +70,6 @@ class ChangeUsername extends Component {
 
   nameChangeHandler = (event) => {
     this.setState({ newUsernameInput: event.target.value });
-  };
-
-  submitHandler = (event) => {
-    const updateUserBody = {
-      id: this.props.userId,
-      newUsername: this.state.newUsernameInput,
-    };
-
-    if (
-      this.state.newUsernameInput.length > 0 &&
-      this.state.newUsernameInput != null
-    ) {
-      axios
-        .put(
-          "http://217.101.44.31:8081/api/public/user/UpdateUsername",
-          updateUserBody
-        )
-        .then((res) => {
-          console.log(res.data);
-          this.handleModalClose();
-        });
-    } else {
-      this.setState({ inputError: true });
-    }
   };
 
   render() {
@@ -68,15 +95,13 @@ class ChangeUsername extends Component {
           </Modal.Body>
 
           <Modal.Footer className="changeUsernameModalFooter">
-            {this.state.inputError && (
-              <div className="changeUsernameInputError">
-                Username can't be empty
-              </div>
-            )}
+            <div className="changeUsernameInputError">
+              {this.state.inputErrorText}
+            </div>
             <Button
               className="changeUsernameOkButton"
               variant="primary"
-              onClick={() => this.submitHandler()}
+              onClick={() => this.testIfUsernameTaken()}
             >
               OK
             </Button>

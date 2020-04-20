@@ -5,6 +5,7 @@ import axios from "axios";
 import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
+import StarRatingComponent from "react-star-rating-component";
 
 class BarList extends Component {
   state = {
@@ -12,21 +13,18 @@ class BarList extends Component {
     addBarState: false,
     addBeerState: false,
     selectedBarId: 0,
+    selectedBarRating: 0,
     barListUpdated: false,
     beerListUpdated: false,
+    ratingsUpdated: false,
     toggleState: false,
     lastToggleBarId: 0,
     bars: [],
-    barId: [],
-    barName: [],
-    barAddress: [],
-    barTel: [],
-    barZip: [],
-    beerId: [],
-    beerName: [],
-    beerPrice: [],
-    beerBrand: [],
-    beerAlcPct: [],
+    beers: [],
+    barRatingsObjects: [],
+    barRatings: [],
+    checkedIn: [],
+    checkInButtonClassName: [],
   };
 
   componentDidMount() {
@@ -37,23 +35,64 @@ class BarList extends Component {
     await axios
       .get("http://217.101.44.31:8084/api/public/bar/getAllBars")
       .then((res) => {
+        console.log("getAllBars:");
         console.log(res);
-
-        this.setState({ bars: res.data.bars });
-
-        if (res.data.bars != null) {
+        console.log(res.data);
+        if (res.data.bars !== null) {
           res.data.bars.forEach((item) => {
-            this.state.barId.push(item.id);
-            this.state.barName.push(item.name);
-            this.state.barAddress.push(item.adress);
-            this.state.barTel.push(item.telephoneNumber);
-            this.state.barZip.push(item.zipcode);
-
-            this.setState({ barListUpdated: true });
+            this.state.bars.push(item);
           });
+          this.setupCheckInButtons();
+          this.getAllRatings();
         } else {
           this.getBars();
         }
+      });
+  }
+
+  setupCheckInButtons() {
+    this.state.bars.forEach(() => {
+      this.state.barRatings.push(0);
+      this.state.checkedIn.push("Check-in");
+      this.state.checkInButtonClassName.push("barListCheckInButton");
+    });
+  }
+
+  async getAllRatings() {
+    await axios
+      .get(
+        "http://217.101.44.31:8086/api/public/bar/getAllUserRatings/" +
+          this.props.userId
+      )
+      .then((res) => {
+        res.data.barRatings.forEach((item) => {
+          this.state.barRatingsObjects.push(item);
+        });
+        this.sortRatings();
+      });
+  }
+
+  sortRatings() {
+    this.state.bars.forEach((barItem, index) => {
+      this.state.barRatingsObjects.forEach((ratingItem) => {
+        if (barItem.id === ratingItem.barId) {
+          let a = this.state.barRatings;
+          a[index] = ratingItem.rating;
+          this.setState({ barRatings: a });
+        }
+      });
+    });
+    this.setState({ barListUpdated: true });
+  }
+
+  async getBarAverageRating(barIdParam) {
+    await axios
+      .get(
+        "http://217.101.44.31:8086/api/public/bar/getBarAverage/" + barIdParam
+      )
+      .then((res) => {
+        let r = +res.data.average.toFixed(2);
+        this.setState({ selectedBarRating: r });
       });
   }
 
@@ -62,16 +101,91 @@ class BarList extends Component {
       .get("http://217.101.44.31:8084/api/public/bar/getById/" + barIdParam)
       .then((res) => {
         res.data.beers.forEach((item) => {
-          this.state.beerId.push(item.beer.id);
-          this.state.beerName.push(item.beer.name);
-          this.state.beerBrand.push(item.beer.brand);
-          this.state.beerAlcPct.push(item.beer.alcoholPercentage);
-          this.state.beerPrice.push(item.price);
-
-          this.setState({ beerListUpdated: true });
+          this.state.beers.push(item);
         });
+        this.setState({ beerListUpdated: true });
       });
   }
+
+  async rateBar(barIdParam, ratingParam) {
+    const rateBarBody = {
+      objectId: barIdParam,
+      objectRating: ratingParam,
+      userId: this.props.userId,
+    };
+
+    await axios
+      .post("http://217.101.44.31:8086/api/public/bar/rateBar", rateBarBody)
+      .then((res) => {
+        console.log(res);
+        this.getAllRatings();
+      });
+  }
+
+  async editBarRating(barIdParam, ratingParam, ratingIdParam) {
+    const editBarRatingBody = {
+      barId: barIdParam,
+      id: ratingIdParam,
+      rating: ratingParam,
+      userId: this.props.userId,
+    };
+
+    await axios
+      .put(
+        "http://217.101.44.31:8086/api/public/bar/EditBarRating",
+        editBarRatingBody
+      )
+      .then((res) => {
+        console.log(res);
+        this.getAllRatings();
+      });
+  }
+
+  testIfBarRated(barIdParam, ratingParam) {
+    let barRated = false;
+    let barRatingId = 0;
+
+    this.state.barRatingsObjects.forEach((item) => {
+      if (item.barId === barIdParam) {
+        barRated = true;
+        barRatingId = item.id;
+      }
+    });
+
+    if (barRated) {
+      this.editBarRating(barIdParam, ratingParam, barRatingId);
+    } else {
+      this.rateBar(barIdParam, ratingParam);
+    }
+  }
+
+  async checkIntoBar(barIdParam) {
+    const checkIntoBarBody = {
+      bar_id: barIdParam,
+      user_id: this.props.userId,
+    };
+
+    await axios
+      .post(
+        "http://217.101.44.31:8085/api/public/activity/postActivity",
+        checkIntoBarBody
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
+  checkInButtonHandler = (barIdParam, index) => {
+    if (this.state.checkedIn[index] === "Check-in") {
+      this.checkIntoBar(barIdParam);
+    }
+
+    this.state.checkedIn.fill("Check-in");
+    this.state.checkInButtonClassName.fill("barListCheckInButton");
+    this.state.checkedIn[index] = "Checked-in";
+    this.state.checkInButtonClassName[index] = "barListCheckedInButton";
+    this.forceUpdate();
+  };
 
   toggleButtonHandler = (barIdParam) => {
     if (
@@ -80,28 +194,23 @@ class BarList extends Component {
     ) {
       this.setState(
         {
-          beerId: [],
-          beerName: [],
-          beerPrice: [],
-          beerBrand: [],
-          beerAlcPct: [],
+          beers: [],
+          selectedBarRating: null,
         },
         () => {
           this.getBarBeers(barIdParam);
+          this.getBarAverageRating(barIdParam);
         }
       );
     } else {
       if (this.state.toggleState === false) {
-        this.setState({ toggleState: true });
+        this.setState({ toggleState: true, selectedBarRating: null });
         this.getBarBeers(barIdParam);
+        this.getBarAverageRating(barIdParam);
       } else {
         this.setState({
           toggleState: false,
-          beerId: [],
-          beerName: [],
-          beerPrice: [],
-          beerBrand: [],
-          beerAlcPct: [],
+          beers: [],
           beerListUpdated: false,
         });
       }
@@ -114,14 +223,19 @@ class BarList extends Component {
     this.props.callBack();
   };
 
+  onStarClick(barIdParam, index, ratingParam) {
+    let a = this.state.barRatings;
+    a[index] = ratingParam;
+    this.setState({ barRatings: a });
+
+    this.testIfBarRated(barIdParam, ratingParam);
+  }
+
   editBarCallBack = () => {
     this.setState({
       editBarState: false,
-      barId: [],
-      barName: [],
-      barAddress: [],
-      barTel: [],
-      barZip: [],
+      bars: [],
+      barRatings: [],
     });
     this.getBars();
   };
@@ -129,11 +243,7 @@ class BarList extends Component {
   addBeerCallBack = () => {
     this.setState({
       addBeerState: false,
-      beerId: [],
-      beerName: [],
-      beerPrice: [],
-      beerBrand: [],
-      beerAlcPct: [],
+      beers: [],
     });
     this.getBarBeers(this.state.lastToggleBarId);
   };
@@ -141,11 +251,8 @@ class BarList extends Component {
   addBarCallBack = () => {
     this.setState({
       addBarState: false,
-      barId: [],
-      barName: [],
-      barAddress: [],
-      barTel: [],
-      barZip: [],
+      bars: [],
+      barRatings: [],
     });
     this.getBars();
   };
@@ -179,55 +286,69 @@ class BarList extends Component {
         </Button>
         <Accordion>
           {this.state.barListUpdated &&
-            this.state.barId.map((item, i) => (
+            this.state.bars.map((item, i) => (
               <Card key={i}>
-                <Card.Header
-                  className="barListHeader"
-                  onClick={() => this.toggleButtonHandler(item)}
-                >
+                <Card.Header className="barListHeader">
                   <Accordion.Toggle
+                    onClick={() => this.toggleButtonHandler(item.id)}
                     as={Card.Header}
                     eventKey={i}
                     className="barListToggle"
                   >
-                    {this.state.barName[i]}
+                    {item.name}
                   </Accordion.Toggle>
+
+                  <StarRatingComponent
+                    name={item.name}
+                    className="barListRating"
+                    starCount={5}
+                    value={this.state.barRatings[i]}
+                    onStarClick={this.onStarClick.bind(this, item.id, i)}
+                  />
+                  <Button
+                    className={this.state.checkInButtonClassName[i]}
+                    onClick={() => this.checkInButtonHandler(item.id, i)}
+                    style={{ backgroundColor: this.state.bgColor }}
+                  >
+                    {this.state.checkedIn[i]}
+                  </Button>
                 </Card.Header>
                 <Accordion.Collapse eventKey={i}>
                   <Card.Body className="barListBody">
                     <div className="barListBodyText">
-                      Address: {this.state.barAddress[i]}
+                      Average Star-rating: {this.state.selectedBarRating}
                     </div>
                     <div className="barListBodyText">
-                      Tel: {this.state.barTel[i]}
+                      Address: {item.adress}
                     </div>
                     <div className="barListBodyText">
-                      Zip: {this.state.barZip[i]}
+                      Tel: {item.telephoneNumber}
                     </div>
+                    <div className="barListBodyText">Zip: {item.zipcode}</div>
                     <Button
                       className="barListEditButton"
-                      onClick={() => this.showEditBar(item)}
+                      onClick={() => this.showEditBar(item.id)}
                     >
                       Edit bar
                     </Button>
                     <Button
                       className="barListAddBeerButton"
-                      onClick={() => this.showAddBeer(item)}
+                      onClick={() => this.showAddBeer(item.id)}
                     >
                       Add beers
                     </Button>
                     <div className="barListBeersHeader">Beers:</div>
                     <ListGroup className="barListBeersList">
                       {this.state.beerListUpdated &&
-                        this.state.beerId.map((item, i) => (
+                        this.state.beers.map((item, i) => (
                           <ListGroup.Item
                             key={i}
                             className="barListBeersListItem"
                           >
-                            {this.state.beerBrand[i]} {this.state.beerName[i]},{" "}
-                            {this.state.beerAlcPct[i]} %
+                            {item.beer.brand} {item.beer.name},{" "}
+                            {item.beer.alcoholPercentage} %
                             <span className="barListBeerPrice">
-                              {this.state.beerPrice[i]} €
+                              {item.price} €
                             </span>
                           </ListGroup.Item>
                         ))}

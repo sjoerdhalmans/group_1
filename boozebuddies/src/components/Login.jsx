@@ -11,7 +11,7 @@ function Login(props) {
     user,
     isAuthenticated,
     loginWithRedirect,
-    logout
+    logout,
   } = useAuth0();
 
   const [total, setTotal] = useState(0);

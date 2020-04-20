@@ -71,7 +71,6 @@ class EditBar extends Component {
     axios
       .put("http://217.101.44.31:8084/api/public/bar/editBar", editBarBody)
       .then((res) => {
-        console.log(this.state.barBeers);
         console.log(res);
 
         this.setState({

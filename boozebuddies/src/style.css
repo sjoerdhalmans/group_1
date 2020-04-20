@@ -16,6 +16,7 @@ body {
 }
 
 .friendList {
+  margin-left: 20px;
   margin-top: 20px;
   position: absolute;
   width: 235px;
@@ -32,7 +33,7 @@ body {
   left: 23.75%;
   right: 23.75%;
   position: absolute;
-  width: 52.5%;
+  width: 1008px;
   color: white;
 }
 

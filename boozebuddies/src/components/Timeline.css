@@ -1,0 +1,74 @@
+.timeline {
+  margin-top: 20px;
+  background-color: rgb(32, 32, 32);
+  border-style: solid;
+  border-color: rgb(204, 92, 0);
+  left: 23.75%;
+  right: 23.75%;
+  position: absolute;
+  width: 52.5%;
+  color: white;
+}
+
+.timelineHeader {
+  color: orange;
+  font-size: 30px;
+  letter-spacing: 0.05em;
+  height: 50px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.timelineToggleButton {
+  position: absolute;
+  right: 90px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+}
+
+.timelineToggleButton:hover,
+.timelineToggleButton:focus,
+.timelineToggleButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.timelineHideButton {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.timelineHideButton:hover,
+.timelineHideButton:focus,
+.timelineHideButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.timelineListItem {
+  height: 80px;
+  background-color: rgb(32, 32, 32);
+  color: orange;
+  border-color: rgb(204, 92, 0);
+}
+
+.activityHeader {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.activitySpan {
+  position: absolute;
+  right: 20px;
+}

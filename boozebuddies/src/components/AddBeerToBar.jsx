@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button, ListGroup, Form, Tab } from "react-bootstrap";
+import { Button, ListGroup, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
 import "./AddBeerToBar.css";
@@ -9,10 +9,7 @@ class AddBeerToBar extends Component {
   state = {
     showModal: false,
     beerListUpdated: false,
-    beerId: [],
-    beerName: [],
-    beerBrand: [],
-    beerAlcPct: [],
+    beers: [],
     addedBeerBrand: "",
     addedBeerName: "",
     addedBeerPrice: 0,
@@ -33,13 +30,9 @@ class AddBeerToBar extends Component {
         console.log(res);
 
         res.data.beers.forEach((item) => {
-          this.state.beerId.push(item.id);
-          this.state.beerName.push(item.name);
-          this.state.beerBrand.push(item.brand);
-          this.state.beerAlcPct.push(item.alcoholPercentage);
-
-          this.setState({ beerListUpdated: true, showModal: true });
+          this.state.beers.push(item);
         });
+        this.setState({ beerListUpdated: true, showModal: true });
       });
   }
 
@@ -61,8 +54,8 @@ class AddBeerToBar extends Component {
 
     this.setState({
       beerAdded: true,
-      addedBeerBrand: this.state.beerBrand[this.state.selectedBeerIndex],
-      addedBeerName: this.state.beerName[this.state.selectedBeerIndex],
+      addedBeerBrand: this.state.beers[this.state.selectedBeerIndex].brand,
+      addedBeerName: this.state.beers[this.state.selectedBeerIndex].name,
       lastAddedBeerPrice: this.state.addedBeerPrice,
     });
   }
@@ -117,16 +110,15 @@ class AddBeerToBar extends Component {
           <Modal.Body className="addBeerToBarModalBody2">
             <ListGroup className="addBeerToBarList">
               {this.state.beerListUpdated &&
-                this.state.beerId.map((item, i) => (
+                this.state.beers.map((item, i) => (
                   <ListGroup.Item
                     key={i}
                     className="addBeerToBarListItem"
                     action
-                    href={"#beer" + item}
-                    onClick={() => this.onClickHandler(item, i)}
+                    href={"#beer" + item.id}
+                    onClick={() => this.onClickHandler(item.id, i)}
                   >
-                    {this.state.beerBrand[i]} {this.state.beerName[i]},{" "}
-                    {this.state.beerAlcPct[i]} %
+                    {item.brand} {item.name}, {item.alcoholPercentage} %
                   </ListGroup.Item>
                 ))}
             </ListGroup>

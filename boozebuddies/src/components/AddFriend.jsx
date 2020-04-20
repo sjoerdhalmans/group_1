@@ -9,7 +9,7 @@ class AddFriend extends Component {
   state = {
     showModal: true,
     friendName: "",
-    inputError: false,
+    inputErrorText: "",
   };
 
   handleModalClose = () => {
@@ -17,26 +17,59 @@ class AddFriend extends Component {
     this.props.callBack();
   };
 
-  addFriend() {
-    if (this.state.friendName.length > 0 && this.state.friendName != null) {
-      axios({
-        method: "post",
-        url: "http://217.101.44.31:8082/api/public/friend/addRelationship",
-        headers: {},
-        data: {
-          friendUsername: this.state.friendName,
-          you: {
-            email: this.props.userEmail,
-            id: this.props.userId,
-            name: this.props.userName,
-          },
+  async addFriend() {
+    await axios({
+      method: "post",
+      url: "http://217.101.44.31:8082/api/public/friend/addRelationship",
+      headers: {},
+      data: {
+        friendUsername: this.state.friendName,
+        you: {
+          email: this.props.userEmail,
+          id: this.props.userId,
+          name: this.props.userName,
         },
-      }).then((res) => {
-        console.log(res);
-        this.handleModalClose();
+      },
+    }).then((res) => {
+      console.log(res);
+      this.handleModalClose();
+    });
+  }
+
+  testIfUserExists() {
+    let userNameExists = false;
+    axios
+      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .then((res) => {
+        if (res.data.name !== null) {
+          res.data.forEach((item) => {
+            if (item.name === this.state.friendName) {
+              userNameExists = true;
+            }
+          });
+
+          if (userNameExists === true) {
+            this.addFriend();
+          } else {
+            this.setState({ inputErrorText: "User doesn't exist" });
+          }
+        } else {
+          this.testIfUserExists();
+        }
       });
+  }
+
+  testInput() {
+    if (this.state.friendName !== this.props.userName) {
+      if (this.state.friendName.length > 0 && this.state.friendName != null) {
+        this.testIfUserExists();
+      } else {
+        this.setState({ inputErrorText: "Username can't be empty" });
+      }
     } else {
-      this.setState({ inputError: true });
+      this.setState({
+        inputErrorText: this.state.friendName + " will never be your friend",
+      });
     }
   }
 
@@ -63,13 +96,13 @@ class AddFriend extends Component {
           </Modal.Body>
 
           <Modal.Footer className="addFriendModalFooter">
-            {this.state.inputError && (
-              <div className="addFriendInputError">Username can't be empty</div>
-            )}
+            <div className="addFriendInputError">
+              {this.state.inputErrorText}
+            </div>
             <Button
               className="addFriendOkButton"
               variant="primary"
-              onClick={() => this.addFriend()}
+              onClick={() => this.testInput()}
             >
               Add
             </Button>
