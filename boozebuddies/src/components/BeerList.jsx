@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Button, ListGroup } from "react-bootstrap";
 //import "./FriendList.css";
-import "./styles/BarList.css";
+import "./BarList.css";
 
 
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, ListGroup, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
-import "./styles/AddBeerToBar.css";
+import "./AddBeerToBar.css";
 
 class AddBeerToBar extends Component {
   state = {

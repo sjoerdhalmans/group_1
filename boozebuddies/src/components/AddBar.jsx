@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "react-bootstrap/Modal";
-import "./styles/AddBar.css";
+import "./AddBar.css";
 
 class AddBar extends Component {
   state = {

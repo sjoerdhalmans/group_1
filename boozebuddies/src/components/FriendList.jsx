@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, ListGroup } from "react-bootstrap";
-import "./styles/FriendList.css";
+import "./FriendList.css";
 import AddFriend from "./AddFriend";
 
 class FriendList extends Component {
@@ -28,7 +28,7 @@ class FriendList extends Component {
     await axios
       .get(
         "http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/" +
-        this.state.userId
+          this.state.userId
       )
       .then((res) => {
         res.data.relationships.forEach((item) => {

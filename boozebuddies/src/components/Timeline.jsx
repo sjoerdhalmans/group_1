@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, ListGroup } from "react-bootstrap";
-import "./styles/Timeline.css";
+import "./Timeline.css";
 
 class Timeline extends Component {
   state = {

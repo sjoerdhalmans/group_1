@@ -1,22 +1,11 @@
 import React, { Component } from "react";
 import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
-import "./styles/BarList.css";
+import "./BarList.css";
 import axios from "axios";
 import EditBar from "./EditBar";
 import AddBeerToBar from "./AddBeerToBar";
 import AddBar from "./AddBar";
 import StarRatingComponent from "react-star-rating-component";
-
-/*TODO:
-+check-in buttons
-+make bar ratings understandable
-+better timeline
-+new user-check if username taken
-+addfriend test that user exists
-+change username check if username taken
-!!-fix api bugs when starting first time
--bar/beer search and sorting
-*/
 
 class BarList extends Component {
   state = {

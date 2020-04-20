@@ -3,7 +3,7 @@ import { useAuth0 } from "../react-auth0-spa";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/Login.css";
+import "./Login.css";
 
 function Login(props) {
   const {
@@ -11,7 +11,7 @@ function Login(props) {
     user,
     isAuthenticated,
     loginWithRedirect,
-    logout
+    logout,
   } = useAuth0();
 
   const [total, setTotal] = useState(0);

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import "./styles/EditBar.css";
+import "./EditBar.css";
 
 class EditBar extends Component {
   state = {
@@ -31,7 +31,7 @@ class EditBar extends Component {
     await axios
       .get(
         "http://217.101.44.31:8084/api/public/bar/getById/" +
-        this.props.editBarId
+          this.props.editBarId
       )
       .then((res) => {
         this.setState({
