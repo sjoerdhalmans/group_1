@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import { Button, ListGroup } from "react-bootstrap";
+//import { Button, ListGroup } from "react-bootstrap";
+import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
 //import "./FriendList.css";
-import "./BarList.css";
+import "./BeerList.css";
+import StarRatingComponent from 'react-star-rating-component';
 
 
 
@@ -15,6 +17,8 @@ class Beer {
     this.name = name;
     this.brand = brand;
     this.alcoholPercentage = alcoholPercentage;
+    this.ratingByUser = 0;
+    this.ratingId = 0;
   }
 }
 
@@ -28,6 +32,8 @@ class BeerList extends Component {
     super(props);
 
 //Button function binds
+    this.showAddBeerClicked = this.showAddBeerClicked.bind(this);
+
 
     //list order buttons
     this.sortByBrandClicked = this.sortByBrandClicked.bind(this);
@@ -37,6 +43,14 @@ class BeerList extends Component {
 
     //add beer buttons
     this.addBeerClicked = this.addBeerClicked.bind(this);
+    this.cancelAddBeerClicked = this.cancelAddBeerClicked.bind(this);
+
+    //rate beer buttons
+    this.addRatingClicked = this.addRatingClicked.bind(this);
+    this.rateBeerClicked = this.rateBeerClicked.bind(this);
+    this.cancelAddRatingClicked = this.cancelAddRatingClicked.bind(this);
+
+
 
 
     let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
@@ -55,21 +69,25 @@ class BeerList extends Component {
         listFilter:"",
 
         barId: props.barId,
+        userId: props.userId,             //CHANEGE HERE props.userId AFTER ADDING IT IN APP.JS
 
+        showAddBeer:false,
         addBeerState: false,
         addBeerBrand:"",
         addBeerName:"",
-        addBeerAlcoholPercentage:0
+        addBeerAlcoholPercentage:0,
 
+        showRateBeer: false,
+        currentBeerId: 0,
+        currentBeerRating: 0,
+        currentBeerInfoString:"",
+        rateBeerApiCall: false,
+        callSetCurrentBeerInfoString: false,
+
+        getRatingsApiCall: true
       };
   }
 
-//callBacks
-/*
-  hideBeerListCallBack = () => {
-    this.props.hideBeerListCallBack();
-  };
-*/
 
 
 
@@ -116,6 +134,22 @@ class BeerList extends Component {
       this.filterListBy(this.state.listFilter);
     }
 
+    if(this.state.rateBeerApiCall == true)
+    {
+      this.addNewBeerRating();
+    }
+
+    if(this.state.getRatingsApiCall ==  true)
+    {
+      this.getAllUserRatings();
+    }
+
+    if(this.state.callSetCurrentBeerInfoString ==  true)
+    {
+      this.setCurrentBeerInfoString();
+    }
+
+
   }
 
 
@@ -123,7 +157,6 @@ class BeerList extends Component {
 
   async getBeers()
   {
-    //let newBeersArray = this.state.beerArray;
       let newBeersArray =[];  //creating new array for beer, so setState can be used instead of push
 
     await axios
@@ -141,15 +174,63 @@ class BeerList extends Component {
         if( this.state.listFilter == null || this.state.listFilter.length == 0)
         {
           this.setState({ beerArrayFiltered: newBeersArray });
+          this.getAllUserRatings();
         }
 
+
+
         this.setState({ beerArray: newBeersArray });
+        this.getAllUserRatings();
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
       })
     }
 
 
+    async getAllUserRatings()
+    {
+      this.setState({getRatingsApiCall: false})
 
-    
+      await axios
+        .get("http://217.101.44.31:8086/api/public/bar/getAllUserRatings/"+this.state.userId)
+        .then(res => {
+            console.log("getAllUserRatings response");
+
+        //Add ratings to beerArray
+            let beerArrayWithRatings =  this.state.beerArray;
+
+            res.data.beerRatings.forEach(item => {
+              //console.log(item.beerId);
+
+              let indexOfBeerInArray =  this.state.beerArray.findIndex(beer => beer.id === item.beerId);
+              //console.log("indexOfBeerInArray");
+              //console.log(indexOfBeerInArray);
+
+              let beerWithRating =  beerArrayWithRatings[indexOfBeerInArray];
+              beerWithRating.ratingByUser = item.rating;
+              beerWithRating.ratingId = item.id;
+
+              beerArrayWithRatings[indexOfBeerInArray] = beerWithRating;
+
+              });
+            this.setState({beerArray: beerArrayWithRatings})
+
+            //console.log(res);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+
+    }
+
+
+
+
+
+
     async addNewBeer()
     {
       this.setState({addBeerState:false})
@@ -170,19 +251,66 @@ class BeerList extends Component {
                       name: this.state.addBeerName
                     };
 
-
-
                     await axios.post("http://217.101.44.31:8083/api/public/beer/addBeer", addBeerBody )
                     .then(res => {
                       console.log(res);
 
                       this.getBeers();
                       this.resetAddBeerValues();
-
-
+                      this.setState({showAddBeer: false});
                     })}
-
     }
+
+
+
+
+    async addNewBeerRating()
+    {
+      this.setState({rateBeerApiCall:false})
+      console.log("addNewBeerRating()");
+      console.log("rating:"+this.state.currentBeerRating);
+      console.log("beerId:"+this.state.currentBeerId);
+
+        if(this.state.currentBeerRating != 0 && this.state.currentBeerId != 0)
+        {
+
+          console.log("if-conditions ok");
+                        let addBeerRatingBody =
+                        {
+                          objectId: this.state.currentBeerId,
+                          objectRating: this.state.currentBeerRating,
+                          userId: this.state.userId
+                        };
+
+                        await axios.post("http://217.101.44.31:8086/api/public/bar/rateBeer", addBeerRatingBody )
+                        .then(res => {
+                          console.log(res);
+
+                          this.getBeers();
+                          this.resetRateBeerValues();
+
+                          //this.getBeers();
+                          //this.resetAddBeerValues();
+                          this.setState({showRateBeer: false});
+                        })
+                        .catch(function (error) {
+                          // handle error
+                          console.log(error);
+                        })
+        }
+    }
+
+
+
+    resetRateBeerValues()
+    {
+      this.setState({
+        currentBeerId: 0,
+        currentBeerRating:0,
+      })
+    }
+
+
 
 
     resetAddBeerValues()
@@ -192,13 +320,34 @@ class BeerList extends Component {
         addBeerBrand:"",
         addBeerAlcoholPercentage:0
       })
-
       document.getElementById("idInputAddName").value = "";
       document.getElementById("idInputAddBrand").value = "";
       document.getElementById("idInputAddAlcoholPercentage").value = "";
+    }
 
+
+
+
+    setCurrentBeerInfoString()
+    {
+      this.setState({callSetCurrentBeerInfoString: false})
+
+      if(this.state.currentBeerId != 0)
+      {
+        let beer = this.state.beerArray.find(element => element.id == this.state.currentBeerId);
+        let infoString = beer.brand + " "+ beer.name + ", "+beer.alcoholPercentage+ "%";
+
+          this.setState({currentBeerInfoString:infoString});
+      }
+      else
+      {
+          this.setState({currentBeerInfoString:""});
+      }
 
     }
+
+
+
 
 
 
@@ -288,6 +437,20 @@ class BeerList extends Component {
       this.setState({addBeerState: true})
     }
 
+    showAddBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({showAddBeer: true})
+    }
+
+    cancelAddBeerClicked(event)
+    {
+      //console.log("sortReverseClicked");
+      event.preventDefault()
+      this.setState({showAddBeer: false})
+    }
+
 
 
 //filter change handler
@@ -308,6 +471,39 @@ class BeerList extends Component {
       this.setState({ addBeerAlcoholPercentage: event.target.value });
     };
 
+//Rate beer
+  onStarClick(nextValue, prevValue, name) {
+  this.setState({currentBeerRating: nextValue});
+  }
+
+  rateBeerClicked(event)
+  {
+    //console.log("sortReverseClicked");
+    event.preventDefault()
+    this.setState({rateBeerApiCall: true})
+  }
+
+  addRatingClicked(event)
+  {
+    event.preventDefault();
+    this.setState({currentBeerId: event.target.value, callSetCurrentBeerInfoString: true , showRateBeer: true})
+    //console.log("addRatingClicked");
+    //console.log(this.state.currentBeerId);
+  }
+
+  cancelAddRatingClicked(event)
+  {
+    //console.log("sortReverseClicked");
+    event.preventDefault()
+    this.setState({showRateBeer: false})
+  }
+
+
+
+
+
+
+
 
 
 
@@ -320,18 +516,62 @@ class BeerList extends Component {
 
     return(
 
-      <React.Fragment>
+      <div>
 
-      <Button
-        type="submit"
-        onClick={this.hideButtonClicked}
-      >
-        Hide
-      </Button>
 
-        <h4>Beerlist</h4>
 
-        <Button
+        <h4 className="beersHeader">Beerlist</h4>
+
+        <Button className="beersHideButton"
+          type="submit"
+          onClick={this.hideButtonClicked}
+        >
+          Hide
+        </Button>
+
+
+{this.state.showRateBeer &&
+
+  <div className= "rateBeerDiv">
+<h5>Rate {this.state.currentBeerInfoString} </h5>
+
+  <div>
+  <StarRatingComponent
+    name="rate1"
+    starCount={5}
+    value={this.state.currentBeerRating}
+    onStarClick={this.onStarClick.bind(this)}
+  />
+  </div>
+
+  <Button
+    type="submit"
+    onClick={this.rateBeerClicked}
+  >
+    Rate
+  </Button>
+
+  <Button className="beerListButton"
+  type="submit"
+  onClick={this.cancelAddRatingClicked}
+  >
+  Cancel
+  </Button>
+
+  </div>
+}
+
+
+
+
+
+
+
+{!this.state.showAddBeer && !this.state.showRateBeer &&
+
+
+        <div>
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByBrandClicked}
         >
@@ -339,7 +579,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByNameClicked}
         >
@@ -347,7 +587,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortByAlcoholPClicked}
         >
@@ -355,7 +595,7 @@ class BeerList extends Component {
         </Button>
 
 
-        <Button
+        <Button className="beerListButton"
           type="submit"
           onClick={this.sortReverseClicked}
         >
@@ -367,34 +607,92 @@ class BeerList extends Component {
 
 
 
-        {this.state.beerArrayFiltered.map(beer => (
-        <ul key={beer.id}>
-          {beer.id}: <a href="">{beer.brand} {beer.name}</a>, {beer.alcoholPercentage}%
-        </ul>
-        ))}
-
-        <h4>Add New Beer</h4>
-
-        <form>
-          <p>Brand: {this.state.addBeerBrand}</p>
-          <input id="idInputAddBrand" type="text" onChange={this.addBeerBrandChangeHandler} />
-
-          <p>Name: {this.state.addBeerName}</p>
-          <input id="idInputAddName" type="text" onChange={this.addBeerNameChangeHandler} />
-
-          <p>ABV %: {this.state.addBeerAlcoholPercentage}</p>
-          <input id="idInputAddAlcoholPercentage" type="text" onChange={this.addBeerAlcoholPercentageChangeHandler} />
-
-        </form>
-
-        <Button
-        type="submit"
-        onClick={this.addBeerClicked}
+        <Button className="beersAddBeerButton"
+          type="submit"
+          onClick={this.showAddBeerClicked}
         >
-        Add New Beer
+          Add new Beer
         </Button>
 
-      </React.Fragment>
+        <Accordion>
+
+            {this.state.beerArrayFiltered.map(beer => (
+            <Card key={beer.id}>
+              <Card.Header className="beerCardHeader">
+
+                {beer.id}: {beer.brand} {beer.name}, {beer.alcoholPercentage}%,
+
+                {beer.ratingByUser != 0 &&
+                        <div className="beerCardUserRating"> Your rating:
+
+                          <StarRatingComponent className="beerCardUserRatingStars"
+                            editing={false}
+                            starCount={5}
+                            value={beer.ratingByUser}
+                          />
+
+                        </div>}
+
+
+                {beer.ratingByUser ==0 &&
+                  <React.Fragment>
+                  <Button className="beerCardAddRatingButton" value={beer.id} onClick={this.addRatingClicked}> add rating </Button>
+                  </React.Fragment>
+                }
+
+                {beer.ratingByUser !=0 &&
+                  <React.Fragment>
+                  <Button className="beerCardEditRatingButton" value={beer.id} onClick={this.addRatingClicked}> edit </Button>
+                  </React.Fragment>
+                }
+
+
+              </Card.Header>
+
+
+            </Card>
+            ))}
+        </Accordion>
+
+
+        </div>
+}
+
+
+        {this.state.showAddBeer && ( <div className="addBeerDiv">
+                    <h4>Add New Beer</h4>
+
+                    <form>
+                      <p>Brand: {this.state.addBeerBrand}</p>
+                      <input id="idInputAddBrand" type="text" onChange={this.addBeerBrandChangeHandler} />
+
+                      <p>Name: {this.state.addBeerName}</p>
+                      <input id="idInputAddName" type="text" onChange={this.addBeerNameChangeHandler} />
+
+                      <p>ABV %: {this.state.addBeerAlcoholPercentage}</p>
+                      <input id="idInputAddAlcoholPercentage" type="text" onChange={this.addBeerAlcoholPercentageChangeHandler} />
+
+                    </form>
+
+                    <Button className="beerListButton"
+                    type="submit"
+                    onClick={this.addBeerClicked}
+                    >
+                    Add
+                    </Button>
+
+                    <Button className="beerListButton"
+                    type="submit"
+                    onClick={this.cancelAddBeerClicked}
+                    >
+                    Cancel
+                    </Button>
+
+
+                    </div>
+        )}
+
+      </div>
     )
   }
 

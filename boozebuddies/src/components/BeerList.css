@@ -1,0 +1,160 @@
+.beerList {
+  border-style: solid;
+  border-color: rgb(204, 92, 0);
+  position: absolute;
+
+  color: orange;
+  background-color: rgb(32, 32, 32);
+}
+
+.beersHeader {
+  color: orange;
+  font-size: 30px;
+  letter-spacing: 0.05em;
+  height: 50px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.beersHideButton {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.beersHideButton:hover,
+.beersHideButton:focus,
+.beersHideButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.beersAddBeerButton {
+  position: absolute;
+  right: 10px;
+
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.beersAddBeerButton:hover,
+.beersAddBeerButton:focus,
+.beersAddBeerButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.beerListButton {
+
+  color: black;
+  background-color: orange;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  margin-left: 1px;
+}
+
+.beerListButton:hover,
+.beerListButton:focus,
+.beerListButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.beerCardHeader {
+  background-color: rgb(32, 32, 32);
+}
+
+.beerCardAddRatingButton {
+    position: absolute;
+    right: 0px;
+
+    color: black;
+    background-color: orange;
+    border-color: orange;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    margin-left: 1px;
+}
+.beerCardAddRatingButton:hover,
+.beerCardAddRatingButton:focus,
+.beerCardAddRatingButton:active {
+  background: orange;
+  color: #ffffff;
+  border-color: orange;
+}
+
+.beerCardEditRatingButton {
+    position: absolute;
+    right: 0px;
+
+    color: black;
+    background-color: orange;
+    opacity:0.25;
+    border-color: orange;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    margin-left: 1px;
+}
+.beerCardEditRatingButton:hover,
+.beerCardEditRatingButton:focus,
+.beerCardEditRatingButton:active {
+  background: orange;
+  opacity:1;
+  color: #ffffff;
+  border-color: orange;
+}
+
+
+
+.beerCardUserRating {
+  position: absolute;
+  right: 65px;
+  top: 0px;
+
+  width: 150px;
+  text-align: right;
+
+
+}
+
+.beerCardUserRatingStars {
+
+  position: absolute;
+  top: 15px;
+
+  text-align: right;
+
+
+}
+
+.rateBeerDiv {
+
+text-align: center;
+}
+
+.addBeerDiv {
+
+text-align: center;
+}

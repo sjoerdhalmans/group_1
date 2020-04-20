@@ -171,6 +171,7 @@ class App extends Component {
         <BeerList
           hideBeerListCallBack={this.hideBeerList}
           barid={this.barId}
+          userId={this.state.getUserId}
         />
         </div>
         )}
