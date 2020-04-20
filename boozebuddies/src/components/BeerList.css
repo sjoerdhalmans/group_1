@@ -37,7 +37,7 @@
 .beersAddBeerButton {
   position: absolute;
   right: 10px;
-  
+
   color: black;
   background-color: orange;
   border-color: orange;
@@ -99,4 +99,62 @@
   background: orange;
   color: #ffffff;
   border-color: orange;
+}
+
+.beerCardEditRatingButton {
+    position: absolute;
+    right: 0px;
+
+    color: black;
+    background-color: orange;
+    opacity:0.25;
+    border-color: orange;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    margin-left: 1px;
+}
+.beerCardEditRatingButton:hover,
+.beerCardEditRatingButton:focus,
+.beerCardEditRatingButton:active {
+  background: orange;
+  opacity:1;
+  color: #ffffff;
+  border-color: orange;
+}
+
+
+
+.beerCardUserRating {
+  position: absolute;
+  right: 65px;
+  top: 0px;
+
+  width: 150px;
+  text-align: right;
+
+
+}
+
+.beerCardUserRatingStars {
+
+  position: absolute;
+  top: 15px;
+
+  text-align: right;
+
+
+}
+
+.rateBeerDiv {
+
+text-align: center;
+}
+
+.addBeerDiv {
+
+text-align: center;
 }
