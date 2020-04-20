@@ -218,12 +218,13 @@ class App extends Component {
         </div>
 
         {this.state.beerListState && (
-          <div className="beerList">
-            <BeerList
-              hideBeerListCallBack={this.hideBeerList}
-              barid={this.barId}
-            />
-          </div>
+        <div className="beerList">
+          <BeerList
+            hideBeerListCallBack={this.hideBeerList}
+            barid={this.barId}
+            userId={this.state.getUserId}
+          />
+        </div>
         )}
 
         {this.state.changeUsernameState && (

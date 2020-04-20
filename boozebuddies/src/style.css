@@ -41,6 +41,19 @@ body {
   display: none;
 }
 
+.beerList {
+  margin-top: 20px;
+  left: 23.75%;
+  right: 23.75%;
+  position: absolute;
+  width: 52.5%;
+  color: white;
+}
+
+.beerList:empty {
+  display: none;
+}
+
 .headerStyle {
   color: rgb(0, 0, 0);
 }
