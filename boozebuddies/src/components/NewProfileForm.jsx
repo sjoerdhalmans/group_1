@@ -9,33 +9,57 @@ class NewProfileForm extends Component {
   state = {
     newAccountName: "",
     showModal: true,
-    inputError: false,
+    inputErrorText: "",
   };
 
-  nameChangeHandler = (event) => {
-    this.setState({ newAccountName: event.target.value });
-  };
-
-  submitHandler = (event) => {
+  async addUser() {
     const addUserBody = {
       id: 0,
       name: this.state.newAccountName,
       email: this.props.newEmail,
     };
 
-    if (
-      this.state.newAccountName.length > 0 &&
-      this.state.newAccountName != null
-    ) {
-      axios
-        .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
-        .then((res) => {
-          console.log(res.data);
-          this.handleModalClose();
-        });
-    } else {
-      this.setState({ inputError: true });
-    }
+    await axios
+      .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
+      .then((res) => {
+        console.log(res.data);
+        this.handleModalClose();
+      });
+  }
+
+  async testIfUsernameTaken() {
+    let usernameTaken = false;
+    await axios
+      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .then((res) => {
+        console.log(res);
+        if (res.data.name !== null) {
+          res.data.forEach((item) => {
+            if (item.name === this.state.newAccountName) {
+              usernameTaken = true;
+            }
+          });
+
+          if (usernameTaken === false) {
+            if (
+              this.state.newAccountName.length > 0 &&
+              this.state.newAccountName != null
+            ) {
+              this.addUser();
+            } else {
+              this.setState({ inputErrorText: "Username can't be empty" });
+            }
+          } else {
+            this.setState({ inputErrorText: "Username already taken" });
+          }
+        } else {
+          this.testIfUsernameTaken();
+        }
+      });
+  }
+
+  nameChangeHandler = (event) => {
+    this.setState({ newAccountName: event.target.value });
   };
 
   handleModalClose = () => {
@@ -62,15 +86,13 @@ class NewProfileForm extends Component {
           </Modal.Body>
 
           <Modal.Footer className="newProfileFormModalFooter">
-            {this.state.inputError && (
-              <div className="newProfileFormInputError">
-                Username can't be empty
-              </div>
-            )}
+            <div className="newProfileFormInputError">
+              {this.state.inputErrorText}
+            </div>
             <Button
               className="newProfileFormOkButton"
               variant="primary"
-              onClick={() => this.submitHandler()}
+              onClick={() => this.testIfUsernameTaken()}
             >
               OK
             </Button>

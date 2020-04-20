@@ -11,8 +11,10 @@ import StarRatingComponent from "react-star-rating-component";
 +check-in buttons
 +make bar ratings understandable
 +better timeline
--fix api bugs
--new user-check if username taken
++new user-check if username taken
++addfriend test that user exists
++change username check if username taken
+!!-fix api bugs when starting first time
 -bar/beer search and sorting
 */
 
@@ -44,8 +46,10 @@ class BarList extends Component {
     await axios
       .get("http://217.101.44.31:8084/api/public/bar/getAllBars")
       .then((res) => {
+        console.log("getAllBars:");
         console.log(res);
-        if (res.data.bars != null) {
+        console.log(res.data);
+        if (res.data.bars !== null) {
           res.data.bars.forEach((item) => {
             this.state.bars.push(item);
           });

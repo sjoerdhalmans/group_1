@@ -21,14 +21,19 @@ class Timeline extends Component {
     await axios
       .get("http://217.101.44.31:8085/api/public/activity/getAllActivities")
       .then((res) => {
+        console.log("getAllActivities:");
         console.log(res);
+        console.log(res.data);
+        if (res.data.activities !== null) {
+          res.data.activities.forEach((item) => {
+            this.state.activities.push(item);
+          });
+          this.state.activities.reverse();
 
-        res.data.activities.forEach((item) => {
-          this.state.activities.push(item);
-        });
-        this.state.activities.reverse();
-
-        this.setState({ activitiesUpdated: true });
+          this.setState({ activitiesUpdated: true });
+        } else {
+          this.getAllActivities();
+        }
       });
   }
 
@@ -39,6 +44,10 @@ class Timeline extends Component {
           this.props.userId
       )
       .then((res) => {
+        console.log("getFriendsByUserId:");
+        console.log(res);
+        console.log(res.data);
+        console.log(res.data.relationships);
         res.data.relationships.forEach((item) => {
           if (item.status === "accepted") {
             if (item.userOneId.id === this.props.userId) {

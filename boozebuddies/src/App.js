@@ -28,23 +28,29 @@ class App extends Component {
     barId: 0,
   };
 
-  async getUserByEmail() {
-    //test that api is working
+  async testApi() {
     await axios
       .get("http://217.101.44.31:8081/api/public/user/getUserByEmail/test")
       .then((res) => {
-        if (res.data === "") {
-          console.log(res);
+        console.log("getUserByEmail:");
+        console.log(res);
+        console.log(res.data);
+        if (res.data.name === "dontDelete") {
           this.getUserByEmail();
+        } else {
+          this.testApi();
         }
       });
+  }
 
+  async getUserByEmail() {
     await axios
       .get(
         "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
           this.state.newAccountEmail
       )
       .then((res) => {
+        console.log("real user: " + res);
         this.setState(
           {
             getUserStatus: res.status,
@@ -56,8 +62,6 @@ class App extends Component {
             this.testIfNewAccount();
           }
         );
-        console.log(res);
-        console.log(this.state);
       });
   }
 
@@ -68,17 +72,17 @@ class App extends Component {
   }
 
   loginCallBack = (childData) => {
-    this.setState({ newAccountEmail: childData }, () => this.getUserByEmail());
+    this.setState({ newAccountEmail: childData }, () => this.testApi());
     this.setState({ loggedIn: true });
     this.setState({ timelineState: true });
   };
 
   newProfileFormCallBack = () => {
-    this.setState({ isNewAccount: false }, () => this.getUserByEmail());
+    this.setState({ isNewAccount: false }, () => this.testApi());
   };
 
   changeUsernameCallBack = () => {
-    this.setState({ changeUsernameState: false }, () => this.getUserByEmail());
+    this.setState({ changeUsernameState: false }, () => this.testApi());
   };
 
   hideButtonCallBack = () => {
