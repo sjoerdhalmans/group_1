@@ -30,7 +30,7 @@ class App extends Component {
 
   async testApi() {
     await axios
-      .get("http://217.101.44.31:8081/api/public/user/getUserByEmail/test")
+      .get("https://boozebuddies-user.herokuapp.com/api/public/user/getUserByEmail/test")
       .then((res) => {
         console.log("getUserByEmail:");
         console.log(res);
@@ -46,7 +46,7 @@ class App extends Component {
   async getUserByEmail() {
     await axios
       .get(
-        "http://217.101.44.31:8081/api/public/user/getUserByEmail/" +
+        "https://boozebuddies-user.herokuapp.com/api/public/user/getUserByEmail/" +
           this.state.newAccountEmail
       )
       .then((res) => {
