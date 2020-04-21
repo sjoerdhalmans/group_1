@@ -61,7 +61,7 @@ class BarList extends Component {
   async getAllRatings() {
     await axios
       .get(
-        "https://boozebuddies-bar.herokuapp.com/api/public/bar/getAllUserRatings/" +
+        "https://boozebuddies-rating.herokuapp.com/api/public/bar/getAllUserRatings/" +
           this.props.userId
       )
       .then((res) => {
@@ -88,7 +88,7 @@ class BarList extends Component {
   async getBarAverageRating(barIdParam) {
     await axios
       .get(
-        "https://boozebuddies-bar.herokuapp.com/api/public/bar/getBarAverage/" + barIdParam
+        "https://boozebuddies-rating.herokuapp.com/api/public/bar/getBarAverage/" + barIdParam
       )
       .then((res) => {
         if (res.data.numberOfRatings !== 0) {
@@ -119,7 +119,7 @@ class BarList extends Component {
     };
 
     await axios
-      .post("https://boozebuddies-bar.herokuapp.com/api/public/bar/rateBar", rateBarBody)
+      .post("https://boozebuddies-rating.herokuapp.com/api/public/bar/rateBar", rateBarBody)
       .then((res) => {
         console.log(res);
         this.getAllRatings();
@@ -136,7 +136,7 @@ class BarList extends Component {
 
     await axios
       .put(
-        "https://boozebuddies-bar.herokuapp.com/api/public/bar/EditBarRating",
+        "https://boozebuddies-rating.herokuapp.com/api/public/bar/EditBarRating",
         editBarRatingBody
       )
       .then((res) => {
