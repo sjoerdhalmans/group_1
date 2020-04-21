@@ -21,7 +21,7 @@ class Timeline extends Component {
 
   async getAllActivities() {
     await axios
-      .get("http://217.101.44.31:8085/api/public/activity/getAllActivities")
+      .get("https://boozebuddies-activity.herokuapp.com/api/public/activity/getAllActivities")
       .then((res) => {
         console.log("getAllActivities:");
         console.log(res);
@@ -42,7 +42,7 @@ class Timeline extends Component {
   async getFriendIds() {
     await axios
       .get(
-        "http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/" +
+        "https://boozebuddies-friend.herokuapp.com/api/public/friend/getFriendsByUserId/" +
           this.props.userId
       )
       .then((res) => {
@@ -65,7 +65,7 @@ class Timeline extends Component {
 
   async getFriendActivities() {
     await axios
-      .get("http://217.101.44.31:8085/api/public/activity/getAllActivities")
+      .get("https://boozebuddies-activity.herokuapp.com/api/public/activity/getAllActivities")
       .then((res) => {
         res.data.activities.forEach((item) => {
           this.state.friendIds.forEach((friendItem) => {

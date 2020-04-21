@@ -25,7 +25,7 @@ class AddBeerToBar extends Component {
 
   async getAllBeers() {
     await axios
-      .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
+      .get("https://boozebuddies-beer.herokuapp.com/api/public/beer/getAllBeers")
       .then((res) => {
         console.log(res);
 
@@ -45,7 +45,7 @@ class AddBeerToBar extends Component {
 
     await axios
       .post(
-        "http://217.101.44.31:8084/api/public/bar/addBeerToBar",
+        "https://boozebuddies-bar.herokuapp.com/api/public/bar/addBeerToBar",
         addBeerToBarBody
       )
       .then((res) => {

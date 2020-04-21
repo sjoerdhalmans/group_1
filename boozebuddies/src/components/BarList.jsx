@@ -33,7 +33,7 @@ class BarList extends Component {
 
   async getBars() {
     await axios
-      .get("http://217.101.44.31:8084/api/public/bar/getAllBars")
+      .get("https://boozebuddies-bar.herokuapp.com/api/public/bar/getAllBars")
       .then((res) => {
         console.log("getAllBars:");
         console.log(res);
@@ -61,7 +61,7 @@ class BarList extends Component {
   async getAllRatings() {
     await axios
       .get(
-        "http://217.101.44.31:8086/api/public/bar/getAllUserRatings/" +
+        "https://boozebuddies-bar.herokuapp.com/api/public/bar/getAllUserRatings/" +
           this.props.userId
       )
       .then((res) => {
@@ -88,7 +88,7 @@ class BarList extends Component {
   async getBarAverageRating(barIdParam) {
     await axios
       .get(
-        "http://217.101.44.31:8086/api/public/bar/getBarAverage/" + barIdParam
+        "https://boozebuddies-bar.herokuapp.com/api/public/bar/getBarAverage/" + barIdParam
       )
       .then((res) => {
         if (res.data.numberOfRatings !== 0) {
@@ -102,7 +102,7 @@ class BarList extends Component {
 
   async getBarBeers(barIdParam) {
     await axios
-      .get("http://217.101.44.31:8084/api/public/bar/getById/" + barIdParam)
+      .get("https://boozebuddies-bar.herokuapp.com/api/public/bar/getById/" + barIdParam)
       .then((res) => {
         res.data.beers.forEach((item) => {
           this.state.beers.push(item);
@@ -119,7 +119,7 @@ class BarList extends Component {
     };
 
     await axios
-      .post("http://217.101.44.31:8086/api/public/bar/rateBar", rateBarBody)
+      .post("https://boozebuddies-bar.herokuapp.com/api/public/bar/rateBar", rateBarBody)
       .then((res) => {
         console.log(res);
         this.getAllRatings();
@@ -136,7 +136,7 @@ class BarList extends Component {
 
     await axios
       .put(
-        "http://217.101.44.31:8086/api/public/bar/EditBarRating",
+        "https://boozebuddies-bar.herokuapp.com/api/public/bar/EditBarRating",
         editBarRatingBody
       )
       .then((res) => {
@@ -171,7 +171,7 @@ class BarList extends Component {
 
     await axios
       .post(
-        "http://217.101.44.31:8085/api/public/activity/postActivity",
+        "https://boozebuddies-activity.herokuapp.com/api/public/activity/postActivity",
         checkIntoBarBody
       )
       .then((res) => {

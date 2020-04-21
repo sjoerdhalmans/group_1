@@ -173,7 +173,7 @@ class BeerList extends Component {
       let newBeersArray =[];  //creating new array for beer, so setState can be used instead of push
 
     await axios
-      .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
+      .get("https://boozebuddies-beer.herokuapp.com/api/public/beer/getAllBeers")
       .then(res => {
         //console.log(res);
 
@@ -206,7 +206,7 @@ class BeerList extends Component {
       this.setState({getRatingsCalled: false})
 
       await axios
-        .get("http://217.101.44.31:8086/api/public/bar/getAllUserRatings/"+this.state.userId)
+        .get("https://boozebuddies-bar.herokuapp.com/api/public/bar/getAllUserRatings/"+this.state.userId)
         .then(res => {
             //console.log("getAllUserRatings response");
 
@@ -266,7 +266,7 @@ class BeerList extends Component {
                       name: this.state.addBeerName
                     };
 
-                    await axios.post("http://217.101.44.31:8083/api/public/beer/addBeer", addBeerBody )
+                    await axios.post("https://boozebuddies-beer.herokuapp.com/api/public/beer/addBeer", addBeerBody )
                     .then(res => {
                       console.log(res);
 
@@ -297,7 +297,7 @@ class BeerList extends Component {
                           userId: this.state.userId
                         };
 
-                        await axios.post("http://217.101.44.31:8086/api/public/bar/rateBeer", addBeerRatingBody )
+                        await axios.post("https://boozebuddies-bar.herokuapp.com/api/public/bar/rateBeer", addBeerRatingBody )
                         .then(res => {
                           console.log(res);
 
@@ -338,7 +338,7 @@ class BeerList extends Component {
                           userId: this.state.userId
                         };
 
-                        await axios.put("http://217.101.44.31:8086/api/public/bar/EditBeerRating", editBeerRatingBody )
+                        await axios.put("https://boozebuddies-bar.herokuapp.com/api/public/bar/EditBeerRating", editBeerRatingBody )
                         .then(res => {
                           console.log(res);
 
@@ -379,7 +379,7 @@ class BeerList extends Component {
                           userId: this.state.userId
                         };
 
-                        await axios.delete("http://217.101.44.31:8086/api/public/bar/DeleteBeerRating", { data: deleteBeerRatingBody } )
+                        await axios.delete("https://boozebuddies-bar.herokuapp.com/api/public/bar/DeleteBeerRating", { data: deleteBeerRatingBody } )
                         .then(res => {
                           console.log(res);
 

@@ -27,7 +27,7 @@ class FriendList extends Component {
   async getFriends() {
     await axios
       .get(
-        "http://217.101.44.31:8082/api/public/friend/getFriendsByUserId/" +
+        "https://boozebuddies-friend.herokuapp.com/api/public/friend/getFriendsByUserId/" +
           this.state.userId
       )
       .then((res) => {
@@ -102,7 +102,7 @@ class FriendList extends Component {
   deleteFriendCall() {
     axios({
       method: "delete",
-      url: "http://217.101.44.31:8082/api/public/friend/deleteRelationship",
+      url: "https://boozebuddies-friend.herokuapp.com/api/public/friend/deleteRelationship",
       headers: {},
       data: this.state.deleteFriendBody,
     }).then((res) => {
@@ -115,7 +115,7 @@ class FriendList extends Component {
     axios({
       method: "put",
       url:
-        "http://217.101.44.31:8082/api/public/friend/updateRelationshipStatus",
+        "https://boozebuddies-friend.herokuapp.com/api/public/friend/updateRelationshipStatus",
       headers: {},
       data: {
         id: this.state.friendRequestId[i],

@@ -20,7 +20,7 @@ class NewProfileForm extends Component {
     };
 
     await axios
-      .post("http://217.101.44.31:8081/api/public/user/addUser", addUserBody)
+      .post("https://boozebuddies-user.herokuapp.com/api/public/user/addUser", addUserBody)
       .then((res) => {
         console.log(res.data);
         this.handleModalClose();
@@ -30,7 +30,7 @@ class NewProfileForm extends Component {
   async testIfUsernameTaken() {
     let usernameTaken = false;
     await axios
-      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .get("https://boozebuddies-user.herokuapp.com/api/public/user/getAllUsers")
       .then((res) => {
         console.log(res);
         if (res.data.name !== null) {

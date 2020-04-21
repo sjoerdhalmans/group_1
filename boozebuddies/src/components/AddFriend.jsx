@@ -20,7 +20,7 @@ class AddFriend extends Component {
   async addFriend() {
     await axios({
       method: "post",
-      url: "http://217.101.44.31:8082/api/public/friend/addRelationship",
+      url: "https://boozebuddies-friend.herokuapp.com/api/public/friend/addRelationship",
       headers: {},
       data: {
         friendUsername: this.state.friendName,
@@ -39,7 +39,7 @@ class AddFriend extends Component {
   testIfUserExists() {
     let userNameExists = false;
     axios
-      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .get("https://boozebuddies-user.herokuapp.com/api/public/user/getAllUsers")
       .then((res) => {
         if (res.data.name !== null) {
           res.data.forEach((item) => {

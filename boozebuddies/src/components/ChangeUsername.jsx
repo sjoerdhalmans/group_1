@@ -21,7 +21,7 @@ class ChangeUsername extends Component {
 
     await axios
       .put(
-        "http://217.101.44.31:8081/api/public/user/UpdateUsername",
+        "https://boozebuddies-user.herokuapp.com/api/public/user/UpdateUsername",
         updateUserBody
       )
       .then((res) => {
@@ -33,7 +33,7 @@ class ChangeUsername extends Component {
   async testIfUsernameTaken() {
     let usernameTaken = false;
     await axios
-      .get("http://217.101.44.31:8081/api/public/user/getAllUsers")
+      .get("https://boozebuddies-user.herokuapp.com/api/public/user/getAllUsers")
       .then((res) => {
         console.log("getAllUsers:");
         console.log(res);

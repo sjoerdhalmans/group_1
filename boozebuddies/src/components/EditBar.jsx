@@ -30,7 +30,7 @@ class EditBar extends Component {
   async getBarInfo() {
     await axios
       .get(
-        "http://217.101.44.31:8084/api/public/bar/getById/" +
+        "https://boozebuddies-bar.herokuapp.com/api/public/bar/getById/" +
           this.props.editBarId
       )
       .then((res) => {
@@ -69,7 +69,7 @@ class EditBar extends Component {
     };
 
     axios
-      .put("http://217.101.44.31:8084/api/public/bar/editBar", editBarBody)
+      .put("https://boozebuddies-bar.herokuapp.com/api/public/bar/editBar", editBarBody)
       .then((res) => {
         console.log(res);
 

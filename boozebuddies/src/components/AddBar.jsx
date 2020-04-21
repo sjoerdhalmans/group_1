@@ -43,7 +43,7 @@ class AddBar extends Component {
       this.state.newBarTel != null
     ) {
       axios
-        .post("http://217.101.44.31:8084/api/public/bar/addBar", addBarBody)
+        .post("https://boozebuddies-bar.herokuapp.com/api/public/bar/addBar", addBarBody)
         .then((res) => {
           console.log(res);
           this.handleModalClose();
