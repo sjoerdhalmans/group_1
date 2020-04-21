@@ -150,11 +150,37 @@
 }
 
 .rateBeerDiv {
-
 text-align: center;
 }
 
 .addBeerDiv {
-
 text-align: center;
+}
+
+.editRatingDiv
+{
+text-align: center;
+}
+
+.deleteRatingButton {
+
+  color: black;
+  background-color: red;
+  opacity:0.25;
+  border-color: orange;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  margin-left: 1px;
+}
+.deleteRatingButton:hover,
+.deleteRatingButton:focus,
+.deleteRatingButton:active {
+  background: red;
+  opacity:1;
+  color: #ffffff;
+  border-color: orange;
 }

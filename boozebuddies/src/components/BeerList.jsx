@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-//import { Button, ListGroup } from "react-bootstrap";
 import { Button, Accordion, Card, ListGroup } from "react-bootstrap";
-//import "./FriendList.css";
 import "./BeerList.css";
 import StarRatingComponent from 'react-star-rating-component';
 
@@ -50,15 +48,27 @@ class BeerList extends Component {
     this.rateBeerClicked = this.rateBeerClicked.bind(this);
     this.cancelAddRatingClicked = this.cancelAddRatingClicked.bind(this);
 
+    //edit rating buttons
+
+    this.editRatingClicked = this.editRatingClicked.bind(this);
+    this.cancelEditRatingClicked = this.cancelEditRatingClicked.bind(this);
+    this.rateAgainClicked = this.rateAgainClicked.bind(this);
+    this.deleteRatingClicked = this.deleteRatingClicked.bind(this);
 
 
 
-    let beer333 =  new Beer(333, "AKalja", "Merkki", 7.7); //testbeer for debug
+    let beer333 =  new Beer(333, "!", "Try reloading the page", 0); //testbeer for debug
 
     this.state = {
 
         getBeersCalled: false,
+        getRatingsCalled: false,
         filterArrayCalled: false,
+        addBeerCalled: false,
+        rateBeerCalled: false,
+        editRatingCalled: false,
+        deleteRatingCalled: false,
+        setCurrentBeerInfoStringCalled: false,
         beerListUpdated: false,
 
         beerArray:[beer333],
@@ -72,19 +82,17 @@ class BeerList extends Component {
         userId: props.userId,             //CHANEGE HERE props.userId AFTER ADDING IT IN APP.JS
 
         showAddBeer:false,
-        addBeerState: false,
         addBeerBrand:"",
         addBeerName:"",
         addBeerAlcoholPercentage:0,
 
         showRateBeer: false,
+        showEditRating: false,
         currentBeerId: 0,
         currentBeerRating: 0,
-        currentBeerInfoString:"",
-        rateBeerApiCall: false,
-        callSetCurrentBeerInfoString: false,
+        currentBeerRatingId: 0,
+        currentBeerInfoString:""
 
-        getRatingsApiCall: true
       };
   }
 
@@ -94,8 +102,6 @@ class BeerList extends Component {
 //Fuctions
   componentDidMount()
   {
-    //console.log("componentDidMount");
-    //if(!this.state.getBeersCalled)
     this.getBeers();
     this.sortListBy(this.state.listOrder);
   }
@@ -104,24 +110,18 @@ class BeerList extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) //this makes component re-render when a proberty in state is changed
   {
-    //console.log("componentDidUpdate");
-
     if(prevState.listOrder != this.state.listOrder)
     {
-      //console.log("if listOrder");
       this.sortListBy(this.state.listOrder);
     }
 
     if(this.state.reverseListOrder == true)
     {
-      //console.log("if sortReverse");
       this.sortListReverseOrder();
     }
 
-    if(this.state.addBeerState == true)
+    if(this.state.addBeerCalled == true)
     {
-      //let newBeer = new Beer(456, "testName", "testBrand", 45);
-      //this.addNewBeer(newBeer.name, newBeer.brand, newBeer.alcoholPercentage);
       this.addNewBeer(this.state.addBeerName, this.state.addBeerBrand, this.state.addBeerAlcoholPercentage);
     }
 
@@ -134,20 +134,33 @@ class BeerList extends Component {
       this.filterListBy(this.state.listFilter);
     }
 
-    if(this.state.rateBeerApiCall == true)
+    if(this.state.setCurrentBeerInfoStringCalled ==  true)
+    {
+      this.setCurrentBeerInfoString();
+    }
+
+    if(this.state.rateBeerCalled == true)
     {
       this.addNewBeerRating();
     }
 
-    if(this.state.getRatingsApiCall ==  true)
+
+    if(this.state.getRatingsCalled ==  true)
     {
       this.getAllUserRatings();
     }
 
-    if(this.state.callSetCurrentBeerInfoString ==  true)
+    if(this.state.editRatingCalled == true)
     {
-      this.setCurrentBeerInfoString();
+      this.editBeerRating();
     }
+
+    if(this.state.deleteRatingCalled == true)
+    {
+      this.deleteRating();
+    }
+
+
 
 
   }
@@ -162,7 +175,7 @@ class BeerList extends Component {
     await axios
       .get("http://217.101.44.31:8083/api/public/beer/getAllBeers")
       .then(res => {
-        console.log(res);
+        //console.log(res);
 
         res.data.beers.forEach((item, i) => {
           const beer = new Beer(item.id, item.name, item.brand, item.alcoholPercentage);
@@ -170,7 +183,6 @@ class BeerList extends Component {
           newBeersArray.push(beer);
         });
 
-        //this.state.beerArrayFiltered = this.filterListBy(this.state.listFilter); //beerArray can be filtered
         if( this.state.listFilter == null || this.state.listFilter.length == 0)
         {
           this.setState({ beerArrayFiltered: newBeersArray });
@@ -191,12 +203,12 @@ class BeerList extends Component {
 
     async getAllUserRatings()
     {
-      this.setState({getRatingsApiCall: false})
+      this.setState({getRatingsCalled: false})
 
       await axios
         .get("http://217.101.44.31:8086/api/public/bar/getAllUserRatings/"+this.state.userId)
         .then(res => {
-            console.log("getAllUserRatings response");
+            //console.log("getAllUserRatings response");
 
         //Add ratings to beerArray
             let beerArrayWithRatings =  this.state.beerArray;
@@ -211,6 +223,9 @@ class BeerList extends Component {
               let beerWithRating =  beerArrayWithRatings[indexOfBeerInArray];
               beerWithRating.ratingByUser = item.rating;
               beerWithRating.ratingId = item.id;
+
+              //console.log("beerWithRating.ratingId");
+              //console.log(beerWithRating.ratingId);
 
               beerArrayWithRatings[indexOfBeerInArray] = beerWithRating;
 
@@ -233,7 +248,7 @@ class BeerList extends Component {
 
     async addNewBeer()
     {
-      this.setState({addBeerState:false})
+      this.setState({addBeerCalled:false})
 
       if(
         this.state.addBeerName != null && this.state.addBeerName.length > 0 &&
@@ -266,15 +281,15 @@ class BeerList extends Component {
 
     async addNewBeerRating()
     {
-      this.setState({rateBeerApiCall:false})
-      console.log("addNewBeerRating()");
-      console.log("rating:"+this.state.currentBeerRating);
-      console.log("beerId:"+this.state.currentBeerId);
+      this.setState({rateBeerCalled:false})
+      //console.log("addNewBeerRating()");
+      //console.log("rating:"+this.state.currentBeerRating);
+      //console.log("beerId:"+this.state.currentBeerId);
 
         if(this.state.currentBeerRating != 0 && this.state.currentBeerId != 0)
         {
 
-          console.log("if-conditions ok");
+          //console.log("if-conditions ok");
                         let addBeerRatingBody =
                         {
                           objectId: this.state.currentBeerId,
@@ -289,8 +304,6 @@ class BeerList extends Component {
                           this.getBeers();
                           this.resetRateBeerValues();
 
-                          //this.getBeers();
-                          //this.resetAddBeerValues();
                           this.setState({showRateBeer: false});
                         })
                         .catch(function (error) {
@@ -302,11 +315,98 @@ class BeerList extends Component {
 
 
 
+
+    async editBeerRating()
+    {
+      this.setState({editRatingCalled:false})
+      //console.log("editRating()");
+      //console.log("rating:"+this.state.currentBeerRating);
+      //console.log("beerId:"+this.state.currentBeerId);
+      //console.log("ratingId:"+this.state.currentBeerRatingId);
+      //console.log("userId:"+this.state.userId);
+
+
+        if(this.state.currentBeerRating != 0 && this.state.currentBeerId != 0)
+        {
+
+          //console.log("if-conditions ok");
+                        let editBeerRatingBody =
+                        {
+                          beerId: this.state.currentBeerId,
+                          id: this.state.currentBeerRatingId,
+                          rating: this.state.currentBeerRating,
+                          userId: this.state.userId
+                        };
+
+                        await axios.put("http://217.101.44.31:8086/api/public/bar/EditBeerRating", editBeerRatingBody )
+                        .then(res => {
+                          console.log(res);
+
+                          this.getBeers();
+                          this.resetRateBeerValues();
+
+                          this.setState({showEditRating: false});
+                        })
+                        .catch(function (error) {
+                          // handle error
+                          console.log(error);
+                        })
+        }
+    }
+
+
+
+
+    async deleteRating()
+    {
+      this.setState({deleteRatingCalled:false})
+      //console.log("deleteRating()");
+      //console.log("rating:"+this.state.currentBeerRating);
+      //console.log("beerId:"+this.state.currentBeerId);
+      //console.log("ratingId:"+this.state.currentBeerRatingId);
+      //console.log("userId:"+this.state.userId);
+
+
+        if(this.state.currentBeerRating != 0 && this.state.currentBeerId != 0)
+        {
+
+          //console.log("if-conditions ok");
+                        let deleteBeerRatingBody =
+                        {
+                          beerId: this.state.currentBeerId,
+                          id: this.state.currentBeerRatingId,
+                          rating: this.state.currentBeerRating,
+                          userId: this.state.userId
+                        };
+
+                        await axios.delete("http://217.101.44.31:8086/api/public/bar/DeleteBeerRating", { data: deleteBeerRatingBody } )
+                        .then(res => {
+                          console.log(res);
+
+                          this.getBeers();
+                          this.resetRateBeerValues();
+
+                          this.setState({showEditRating: false});
+                        })
+                        .catch(function (error) {
+                          // handle error
+                          console.log(error);
+                        })
+        }
+    }
+
+
+
+
+
     resetRateBeerValues()
     {
+      //console.log("resetRateBeerValues()");
       this.setState({
         currentBeerId: 0,
         currentBeerRating:0,
+        currentBeerRatingId:0,
+        listFilter: ""
       })
     }
 
@@ -330,14 +430,18 @@ class BeerList extends Component {
 
     setCurrentBeerInfoString()
     {
-      this.setState({callSetCurrentBeerInfoString: false})
+      this.setState({setCurrentBeerInfoStringCalled: false})
 
       if(this.state.currentBeerId != 0)
       {
         let beer = this.state.beerArray.find(element => element.id == this.state.currentBeerId);
         let infoString = beer.brand + " "+ beer.name + ", "+beer.alcoholPercentage+ "%";
 
-          this.setState({currentBeerInfoString:infoString});
+        let rating = beer.ratingByUser;
+        let ratingId = beer.ratingId;
+
+          this.setState({currentBeerInfoString:infoString, currentBeerRating:rating, currentBeerRatingId: ratingId});
+
       }
       else
       {
@@ -434,7 +538,7 @@ class BeerList extends Component {
     {
       //console.log("sortReverseClicked");
       event.preventDefault()
-      this.setState({addBeerState: true})
+      this.setState({addBeerCalled: true})
     }
 
     showAddBeerClicked(event)
@@ -480,13 +584,37 @@ class BeerList extends Component {
   {
     //console.log("sortReverseClicked");
     event.preventDefault()
-    this.setState({rateBeerApiCall: true})
+    this.setState({rateBeerCalled: true})
   }
+
+  rateAgainClicked(event)
+  {
+    //console.log("sortReverseClicked");
+    event.preventDefault()
+    this.setState({editRatingCalled: true})
+  }
+
+  deleteRatingClicked(event)
+  {
+    //console.log("sortReverseClicked");
+    event.preventDefault()
+    this.setState({deleteRatingCalled: true})
+  }
+
+
 
   addRatingClicked(event)
   {
     event.preventDefault();
-    this.setState({currentBeerId: event.target.value, callSetCurrentBeerInfoString: true , showRateBeer: true})
+    this.setState({currentBeerId: event.target.value, setCurrentBeerInfoStringCalled: true , showRateBeer: true})
+    //console.log("addRatingClicked");
+    //console.log(this.state.currentBeerId);
+  }
+
+  editRatingClicked(event)
+  {
+    event.preventDefault();
+    this.setState({currentBeerId: event.target.value, setCurrentBeerInfoStringCalled: true , showEditRating: true})
     //console.log("addRatingClicked");
     //console.log(this.state.currentBeerId);
   }
@@ -498,7 +626,12 @@ class BeerList extends Component {
     this.setState({showRateBeer: false})
   }
 
-
+  cancelEditRatingClicked(event)
+  {
+    //console.log("sortReverseClicked");
+    event.preventDefault()
+    this.setState({showEditRating: false})
+  }
 
 
 
@@ -544,7 +677,7 @@ class BeerList extends Component {
   />
   </div>
 
-  <Button
+  <Button className="beerListButton"
     type="submit"
     onClick={this.rateBeerClicked}
   >
@@ -561,13 +694,50 @@ class BeerList extends Component {
   </div>
 }
 
+{this.state.showEditRating &&
+
+  <div className= "editRatingDiv">
+<h5>Edit rating for {this.state.currentBeerInfoString} </h5>
+
+  <div>
+  <StarRatingComponent
+    name="rate2"
+    starCount={5}
+    value={this.state.currentBeerRating}
+    onStarClick={this.onStarClick.bind(this)}
+  />
+  </div>
+
+  <Button className="beerListButton"
+    type="submit"
+    onClick={this.rateAgainClicked}
+  >
+    Rate Again
+  </Button>
+
+  <Button className="deleteRatingButton"
+    type="submit"
+    onClick={this.deleteRatingClicked}
+  >
+    Delete rating
+  </Button>
+
+  <Button className="beerListButton"
+  type="submit"
+  onClick={this.cancelEditRatingClicked}
+  >
+  Cancel
+  </Button>
+
+  </div>
+}
 
 
 
 
 
 
-{!this.state.showAddBeer && !this.state.showRateBeer &&
+{!this.state.showAddBeer && !this.state.showRateBeer && !this.state.showEditRating &&
 
 
         <div>
@@ -642,7 +812,7 @@ class BeerList extends Component {
 
                 {beer.ratingByUser !=0 &&
                   <React.Fragment>
-                  <Button className="beerCardEditRatingButton" value={beer.id} onClick={this.addRatingClicked}> edit </Button>
+                  <Button className="beerCardEditRatingButton" value={beer.id} onClick={this.editRatingClicked}> edit </Button>
                   </React.Fragment>
                 }
 
