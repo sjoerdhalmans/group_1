@@ -9,6 +9,8 @@ class Timeline extends Component {
     activities: [],
     sortedActivities: [],
     friendIds: [],
+    dates: [],
+    times: [],
     toggleButtonText: "Friends",
     showEveryone: true,
   };
@@ -30,7 +32,7 @@ class Timeline extends Component {
           });
           this.state.activities.reverse();
 
-          this.setState({ activitiesUpdated: true });
+          this.getTimeAndDate();
         } else {
           this.getAllActivities();
         }
@@ -73,8 +75,40 @@ class Timeline extends Component {
           });
         });
         this.state.activities.reverse();
-        this.setState({ activitiesUpdated: true });
+        this.getTimeAndDate();
       });
+  }
+
+  getTimeAndDate() {
+    let offset = new Date().getTimezoneOffset();
+    offset = offset * -1;
+    offset = offset / 60;
+
+    this.state.activities.forEach((item) => {
+      let piece = item.timeEnteredBar.substring(11, 16).split(":");
+      let hours = +piece[0] + +offset;
+
+      if (hours > 23) {
+        hours = hours - 24;
+        hours = "0" + hours;
+
+        let datePiece = item.timeEnteredBar.substring(0, 8);
+        let datePiece2 = item.timeEnteredBar.substring(8, 10);
+
+        datePiece2 = +datePiece2 + 1;
+        let date = datePiece + datePiece2;
+
+        this.state.dates.push(date);
+      } else {
+        this.state.dates.push(item.timeEnteredBar.substring(0, 10));
+      }
+
+      let time = hours + ":" + piece[1];
+
+      this.state.times.push(time);
+    });
+
+    this.setState({ activitiesUpdated: true });
   }
 
   toggleButtonHandler = () => {
@@ -124,14 +158,10 @@ class Timeline extends Component {
               <ListGroup.Item key={i} className="timelineListItem">
                 <div className="activityHeader">
                   {this.state.activities[i].user.name}
-                  <span className="activitySpan">
-                    {this.state.activities[i].timeEnteredBar.substring(11, 16)}
-                  </span>
+                  <span className="activitySpan">{this.state.times[i]}</span>
                 </div>
                 Checked into {this.state.activities[i].bar.name}
-                <span className="activitySpan">
-                  {this.state.activities[i].timeEnteredBar.substring(0, 10)}
-                </span>
+                <span className="activitySpan">{this.state.dates[i]}</span>
               </ListGroup.Item>
             ))}
         </ListGroup>
