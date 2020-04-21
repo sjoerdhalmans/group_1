@@ -91,8 +91,12 @@ class BarList extends Component {
         "http://217.101.44.31:8086/api/public/bar/getBarAverage/" + barIdParam
       )
       .then((res) => {
-        let r = +res.data.average.toFixed(2);
-        this.setState({ selectedBarRating: r });
+        if (res.data.numberOfRatings !== 0) {
+          let r = +res.data.average.toFixed(2);
+          this.setState({ selectedBarRating: r });
+        } else {
+          this.setState({ selectedBarRating: 0 });
+        }
       });
   }
 
